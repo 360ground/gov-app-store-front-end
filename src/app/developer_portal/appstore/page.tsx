@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { buildAppApiUrl, buildSubmissionUrl } from '@/utils/api-config';
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Form, Input, Button, notification, Radio, message, Modal } from "antd";
@@ -261,7 +262,7 @@ export default function AppSubmissionOverview() {
     console.log(accessToken);
     if (accessToken) {
       axios
-        .get("http://127.0.0.1:8000/apps/developer_apps/", {
+        .get(buildAppApiUrl("/apps/developer_apps/"), {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
@@ -393,7 +394,7 @@ export default function AppSubmissionOverview() {
 
   const handleAppClick = async (id: number) => {
     // try {
-    //   await fetch("http://127.0.0.1:8000/apps/increment-view-count/", {
+            //   await fetch(buildAppApiUrl("/apps/increment-view-count/"), {
     //     method: "POST",
     //     headers: {
     //       "Content-Type": "application/json",
@@ -459,7 +460,7 @@ export default function AppSubmissionOverview() {
     try {
       const accessToken = localStorage.getItem("access_token");
       console.log(accessToken);
-      const response = await fetch("http://localhost:8000/apps/submit/", {
+              const response = await fetch(buildSubmissionUrl("/apps/submit/"), {
         method: "POST",
         body: formData,
         headers: {
@@ -1371,7 +1372,7 @@ export default function AppSubmissionOverview() {
 
       try {
         const accessToken = localStorage.getItem("access_token");
-        const response = await fetch("http://127.0.0.1:8000/users/change-developer-password/", {
+        const response = await fetch(buildAppApiUrl("/users/change-developer-password/"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

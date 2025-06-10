@@ -10,6 +10,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
 import Footer from '@/components/Footer';
+import { buildBackendUrl,buildMediaUrl } from '@/utils/api-config';
+
 
 export default function AppDetails() {
   const { t } = useLanguage();
@@ -54,12 +56,12 @@ export default function AppDetails() {
     if (id) {
       // Fetch app details based on the id from the backend
       const fetchAppDetails = async () => {
-        try {
-          const response = await fetch(
-            `http://127.0.0.1:8000/apps/listing/${id}`
-          );
-          const data = await response.json();
-          setAppDetails(data); // Set fetched data to state
+              try {
+        const response = await fetch(
+          buildBackendUrl(`/apps/listing/${id}`)
+        );
+        const data = await response.json();
+        setAppDetails(data); // Set fetched data to state
 
           // Fetch related apps using the same endpoint as landing page
           if (data.category) {
@@ -67,9 +69,9 @@ export default function AppDetails() {
               category: data.category,
               exclude: id
             });
-            const relatedResponse = await fetch(
-              `http://127.0.0.1:8000/apps/search?${queryParams.toString()}`
-            );
+                    const relatedResponse = await fetch(
+          buildBackendUrl(`/apps/search?${queryParams.toString()}`)
+        );
             const relatedData = await relatedResponse.json();
             setAppDetails((prev: any) => ({
               ...prev,
@@ -107,7 +109,7 @@ export default function AppDetails() {
     if (newReview.content.trim()) {
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/apps/reviews/${appDetails.id}/`,
+          buildBackendUrl(`/apps/reviews/${appDetails.id}/`),
           {
             method: "POST",
             headers: {
@@ -158,7 +160,7 @@ export default function AppDetails() {
   const fetchUpdatedReviews = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/apps/listing/${id}`
+        buildBackendUrl(`/apps/listing/${id}`)
       );
       const data = await response.json();
       // Update only the reviews part of appDetails
@@ -509,7 +511,7 @@ export default function AppDetails() {
                 key={app.id}
                 onClick={() => {
                   // Increment view count for the clicked app
-                  fetch(`http://127.0.0.1:8000/apps/increment-view-count/`, {
+                  fetch(buildBackendUrl(`/apps/increment-view-count/`), {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
@@ -524,7 +526,7 @@ export default function AppDetails() {
               >
                 <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5">
                   <Image
-                    src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                    src={buildMediaUrl(`${app.cover_graphics}`)}
                     alt={app.app_name}
                     width={300}
                     height={200}

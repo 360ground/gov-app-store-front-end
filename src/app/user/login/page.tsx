@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { preventBackNavigation } from "@/utils/auth";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { buildBackendUrl } from "@/utils/api-config";
 
 export default function Login() {
   const { t } = useLanguage();
@@ -56,7 +57,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/users/login/", {
+      const response = await fetch(buildBackendUrl("/users/login/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

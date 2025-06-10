@@ -16,6 +16,8 @@ import TermsAndConditions from "../../components/TermsAndConditions";
 import ReCaptchaComponent from "../../components/ReCaptcha";
 import RegistrationSuccess from "../../components/RegistrationSuccess";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { buildBackendUrl } from '@/utils/api-config';
+
 
 type Errors = {
   firstName?: string;
@@ -179,7 +181,7 @@ export default function Register() {
       try {
         console.log(userData);
         // Send data to backend (adjust API endpoint as needed)
-        const response = await fetch("http://127.0.0.1:8000/users/register/", {
+        const response = await fetch(buildBackendUrl("/users/register/"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

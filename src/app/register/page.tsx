@@ -12,6 +12,8 @@ import Link from "next/link";
 import TermsAndConditions from "../components/TermsAndConditions";
 import ReCaptchaComponent from "../components/ReCaptcha";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { buildBackendUrl } from '@/utils/api-config';
+
 
 export default function Register() {
   const router = useRouter();
@@ -131,7 +133,7 @@ export default function Register() {
       try {
         console.log(formData.email);
         // Send OTP request
-        const response = await fetch("http://127.0.0.1:8000/users/send-otp/", {
+        const response = await fetch(buildBackendUrl("/users/send-otp/"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

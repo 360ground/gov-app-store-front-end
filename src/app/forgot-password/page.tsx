@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguage } from '@/contexts/LanguageContext';
+import { buildBackendUrl } from '@/utils/api-config';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function ForgotPasswordPage() {
     setSuccessMessage("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/users/forgot-password/", {
+      const response = await fetch(buildBackendUrl("/users/forgot-password/"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

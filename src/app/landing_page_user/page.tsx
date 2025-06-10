@@ -7,6 +7,8 @@ import { handleLogout } from "@/utils/auth";
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
 import Footer from '@/components/Footer';
+import { buildBackendUrl,buildAppApiUrl,buildMediaUrl } from '@/utils/api-config';
+
 
 export interface AppData {
   id: number;
@@ -34,6 +36,7 @@ export default function Home() {
   const [username, setUsername] = useState<string | null>("");
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  
 
   // Map of category display names to backend values
   const categoryMap = {
@@ -73,7 +76,7 @@ export default function Home() {
     } else {
       console.log("Fetching all apps...");
       try {
-        const response = await fetch("http://127.0.0.1:8000/apps/listing");
+        const response = await fetch(buildAppApiUrl("/apps/listing"));
         if (response.ok) {
           const data = await response.json();
           setApps(data);
@@ -112,9 +115,9 @@ export default function Home() {
         });
 
         // Send request to the backend with the filters
-        const response = await fetch(
-          `http://127.0.0.1:8000/apps/search?${queryParams.toString()}`
-        );
+              const response = await fetch(
+        buildAppApiUrl(`/apps/search?${queryParams.toString()}`)
+      );
         if (response.ok) {
           const data = await response.json();
           setApps(data);
@@ -198,7 +201,7 @@ export default function Home() {
       console.log(id);
       console.log(id);
       var response = await fetch(
-        "http://127.0.0.1:8000/apps/increment-view-count/",
+        buildAppApiUrl("/apps/increment-view-count/"),
         {
           method: "POST",
           headers: {
@@ -471,7 +474,7 @@ export default function Home() {
                             }}
                           >
                             <Image
-                              src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                              src={buildMediaUrl(`${app.cover_graphics}`, true)}
                               alt={app.app_name}
                               layout="fill"
                               objectFit="contain"
@@ -485,7 +488,7 @@ export default function Home() {
                               <div className="flex items-center space-x-3 md:space-x-4">
                                 <div className="w-10 h-10 md:w-12 md:h-12">
                                   <Image
-                                    src={`http://127.0.0.1:8000${app.app_icon}`}
+                                    src={buildMediaUrl(`${app.app_icon}`, true)}
                                     alt={`${app.app_name} Icon`}
                                     width={48}
                                     height={48}
@@ -536,7 +539,7 @@ export default function Home() {
                               }}
                             >
                               <Image
-                                src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                                src={buildMediaUrl(`${app.cover_graphics}`, true)}
                                 alt={app.app_name}
                                 layout="fill"
                                 objectFit="contain"
@@ -550,7 +553,7 @@ export default function Home() {
                                 <div className="flex items-center space-x-3 md:space-x-4">
                                   <div className="w-10 h-10 md:w-12 md:h-12">
                                     <Image
-                                      src={`http://127.0.0.1:8000${app.app_icon}`}
+                                      src={buildMediaUrl(`${app.app_icon}`, true)}
                                       alt={`${app.app_name} Icon`}
                                       width={48}
                                       height={48}
@@ -609,7 +612,7 @@ export default function Home() {
                       >
                         <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5">
                           <Image
-                            src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                            src={buildMediaUrl(`${app.cover_graphics}`, true)}
                             alt={app.app_name}
                             width={300}
                             height={200}
@@ -696,7 +699,7 @@ export default function Home() {
                         }}
                       >
                         <Image
-                          src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                          src={buildMediaUrl(`${app.cover_graphics}`, true)}
                           alt={app.app_name}
                           layout="fill"
                           objectFit="contain" // Use "contain" if you want the entire image visible
@@ -710,7 +713,7 @@ export default function Home() {
                           <div className="flex items-center space-x-3 md:space-x-4">
                             <div className="w-10 h-10 md:w-12 md:h-12">
                               <Image
-                                src={`http://127.0.0.1:8000${app.app_icon}`}
+                                src={buildMediaUrl(`${app.app_icon}`, true)}
                                 alt={`${app.app_name} Icon`}
                                 width={48}
                                 height={48}
@@ -763,8 +766,8 @@ export default function Home() {
                         className="p-2 md:p-4 rounded"
                       >
                         <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5">
-                          <Image
-                            src={`http://127.0.0.1:8000${app.cover_graphics}`} // Assuming cover_graphics is the relative URL
+                                                  <Image
+                          src={buildMediaUrl(`${app.cover_graphics}`, true)} // Assuming cover_graphics is the relative URL
                             alt={app.app_name}
                             width={300} // Width for the image
                             height={200} // Height for the image to fit in the container

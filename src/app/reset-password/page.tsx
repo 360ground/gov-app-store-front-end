@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { buildBackendUrl } from '@/utils/api-config';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -50,7 +51,7 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/users/reset-password/", {
+      const response = await fetch(buildBackendUrl("/users/reset-password/"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
