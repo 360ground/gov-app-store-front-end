@@ -100,9 +100,21 @@ const Footer: React.FC = () => {
 
       {/* Bottom Section */}
       <div className="border-t border-gray-700 pt-4 text-black">
-        <p style={{ fontSize: "12px" }}>
-          {t('copyright').replace('{year}', new Date().getFullYear().toString())} | {t('privacy_policy')} | {t('copyright_policy')} | {t('terms')}
-        </p>
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <p style={{ fontSize: "12px" }}>
+            {t('copyright').replace('{year}', new Date().getFullYear().toString())} | {t('privacy_policy')} | {t('copyright_policy')} | {t('terms')}
+          </p>
+          <p style={{ fontSize: "12px" }} className="mt-2 md:mt-0 text-gray-600">
+            Powered by <a 
+              href="https://360ground.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-semibold text-customblue hover:underline transition-all duration-300"
+            >
+              360Ground
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );

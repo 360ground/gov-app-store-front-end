@@ -183,7 +183,9 @@ export default function Register() {
             {t('gateway_message')}
           </p>
         </div>
-        <img src="/logo.png" alt="Logo" className="w-full max-w-xs mx-auto" />
+                 <div className="flex justify-center w-full">
+           <img src="/logo.png" alt="Logo" className="w-full max-w-xs" />
+         </div>
       </div>
       <div className="w-full md:w-1/2 px-6 py-8 md:mt-2 md:py-10 md:px-20 md:rounded-tr-[40px] md:rounded-br-[40px] bg-white shadow-md flex flex-col items-center">
         <div className="mb-4 md:mb-6 w-full">

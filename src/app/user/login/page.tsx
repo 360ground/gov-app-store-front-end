@@ -106,7 +106,9 @@ export default function Login() {
       </p>
     </div>
     
-    <img src="/logo.png" alt="Logo" className="w-full max-w-xs mx-auto md:mx-10" />
+         <div className="flex justify-center w-full">
+       <img src="/logo.png" alt="Logo" className="w-full max-w-xs md:mx-10" />
+     </div>
     
     {/* Navigation row with logo and back button */}
     <div className="absolute top-2 md:top-5 right-2 md:right-5 flex items-center space-x-4 md:space-x-40">
