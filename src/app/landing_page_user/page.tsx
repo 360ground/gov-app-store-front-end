@@ -53,19 +53,19 @@ export default function Home() {
 
   const images = [
     {
-      src: "/main_banner.png",
+      src: "/banner1.svg",
       caption: t('welcome_banner'),
     },
     {
-      src: "/banner_top.png",
+      src: "/banner1.svg",
       caption: t('explore_apps'),
     },
     {
-      src: "/banner_bot_1.png",
+      src: "/banner1.svg",
       caption: t('simplifying_governance'),
     },
     {
-      src: "/banner_bot_2.png",
+      src: "/banner1.svg",
       caption: t('empowering_citizens'),
     },
   ];
@@ -140,42 +140,42 @@ export default function Home() {
     },
     {
       name: t('finance'),
-      icon: "/finance.png",
+      icon: "/finance.svg",
       icon_onclick: "/finance_white.png",
     },
     { 
       name: t('health'), 
-      icon: "/health.png", 
+      icon: "/health.svg", 
       icon_onclick: "/health_white.png" 
     },
     {
       name: t('agriculture'),
-      icon: "/agri.png",
+      icon: "/agri.svg",
       icon_onclick: "/agriculture_white.png",
     },
     { 
       name: t('trade'), 
-      icon: "/trade.png", 
+      icon: "/trade.svg", 
       icon_onclick: "/trade_white.png" 
     },
     {
       name: t('technology'),
-      icon: "/technology.png",
+      icon: "/technology.svg",
       icon_onclick: "/technology_white.png",
     },
     {
       name: t('social'),
-      icon: "/social.png",
+      icon: "/social_affair.svg",
       icon_onclick: "/social_white.png",
     },
     {
       name: t('justice'),
-      icon: "/justice.png",
+      icon: "/justice.svg",
       icon_onclick: "/justice_white.png",
     },
     {
       name: t('logistics'),
-      icon: "/logistic.png",
+      icon: "/logistic.svg",
       icon_onclick: "/logistic_white.png",
     },
   ];
@@ -229,19 +229,19 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header - Made responsive */}
-      <header className="flex flex-col md:flex-row justify-between items-center px-4 md:px-6 py-4 bg-gray-100 gap-4">
-        <div className="flex items-center space-x-4 w-full md:w-auto justify-between md:justify-start">
+      <header className="flex flex-col md:flex-row justify-between items-center px-6 md:px-8 py-4 bg-gray-100 gap-1">
+        <div className="flex items-center space-x-6 w-full md:w-auto justify-between md:justify-start">
           <div className="flex items-center space-x-4">
             <Image 
               src="/efdri.svg" 
               alt="Logo" 
               width={40} 
-              height={30} 
-              className="object-contain h-full"
+              height={40} 
+              className="object-contain"
             />
 
-            <div className="flex flex-col pr-2 md:pr-10">
-              <h1 className="text-black" style={{fontSize: "16px", color:"#767676"}}>{t('government_appstore')}</h1>
+            <div className="flex flex-col">
+              <h1 className="text-black font-medium" style={{fontSize: "16px", color:"#333"}}>{t('government_appstore')}</h1>
               <h1 className="text-black" style={{fontSize: "12px", color:"#767676"}}>{t('official_appstore_fdre')}</h1>
             </div>
           </div>
@@ -258,24 +258,30 @@ export default function Home() {
         {/* Tabs - Responsive design */}
         <div className="flex justify-center w-full md:w-auto">
           <button
-            className={`px-4 md:px-6 py-3 text-sm font-semibold ${
+            className={`px-4 py-3 text-sm font-semibold relative ${
               activeTab === "Mobile Apps"
-                ? "text-customblue border-b-2 border-customblue font-bold"
-                : "text-gray-500"
-            } cursor-pointer`}
+                ? "text-customblue font-bold"
+                : "text-gray-500 hover:text-gray-700"
+            } cursor-pointer transition-colors duration-200`}
             onClick={() => setActiveTab("Mobile Apps")}
           >
             {t('mobile_apps')}
+            {activeTab === "Mobile Apps" && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-customblue"></div>
+            )}
           </button>
           <button
-            className={`px-4 md:px-6 py-3 text-sm font-semibold ${
+            className={`px-4 py-3 text-sm font-semibold relative ${
               activeTab === "Web Portal"
-                ? "text-customblue border-b-2 border-customblue font-bold"
-                : "text-gray-500"
-            } cursor-pointer`}
+                ? "text-customblue font-bold"
+                : "text-gray-500 hover:text-gray-700"
+            } cursor-pointer transition-colors duration-200`}
             onClick={() => setActiveTab("Web Portal")}
           >
             {t('web_portal')}
+            {activeTab === "Web Portal" && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-customblue"></div>
+            )}
           </button>
         </div>
 
@@ -306,9 +312,11 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Main Container with max-width 1200px */}
+      <div className="max-w-[1200px] mx-auto">
       <section className="w-full bg-white py-4 px-4 md:px-10">
       {/* Top Full-Width Image - Made responsive */}
-      <div className="relative w-full h-[30vh] md:h-[40vh] lg:h-[60vh] overflow-hidden rounded-2xl">
+      <div className="relative w-full h-[25vh] md:h-[30vh] lg:h-[54vh] overflow-hidden rounded-2xl">
         {/* Current Image */}
         <div className="relative w-full h-full rounded-2xl overflow-hidden">
           <Image
@@ -319,11 +327,14 @@ export default function Home() {
             className="rounded-2xl"
             priority
           />
+          
+          {/* Gradient overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-2xl"></div>
         </div>
 
         {/* Caption - Made responsive */}
-        <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 bg-black/10 text-white p-2 md:p-4 rounded-lg max-w-[90%] md:max-w-[60%]">
-          <h2 className="text-sm md:text-lg font-bold">{images[currentIndex].caption}</h2>
+        <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 text-white p-2 md:p-4 max-w-[90%] md:max-w-[60%] z-10">
+          <h2 className="text-sm md:text-lg font-bold drop-shadow-lg">{images[currentIndex].caption}</h2>
         </div>
 
         {/* Arrows for Navigation - Made responsive */}
@@ -420,37 +431,83 @@ export default function Home() {
                 <span>{t('ios')}</span>
               </button>
             </section>
-            <section className="flex px-2 md:px-6 space-x-1 md:space-x-4 flex-wrap gap-1 md:gap-2 justify-center md:justify-start">
-              {categories.map((category) => (
+            <section className="px-2 md:px-6 py-4">
+              <div className="flex overflow-x-auto space-x-6 md:space-x-8 pb-2 py-2 " style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflowY: 'visible' }}>
+                {/* All Categories Option */}
                 <button
-                  key={category.name}
-                  className={`${
-                    selectedCategory === category.name
-                      ? "bg-customblue text-white"
-                      : "bg-white text-customblue"
-                  } flex flex-col items-center justify-center w-[80px] h-[80px] md:w-[100px] md:h-[100px] rounded-[8px] hover:bg-customblue transition duration-300 cursor-pointer`}
-                  onClick={() => setSelectedCategory(category.name)}
+                  className="flex flex-col items-center justify-center min-w-[70px] md:min-w-[80px] transition-all duration-300 cursor-pointer flex-shrink-0"
+                  onClick={() => setSelectedCategory("All")}
                 >
+                  <div className={`${
+                    selectedCategory === "All"
+                      ? "bg-customblue rounded-full p-3 mb-2 shadow-lg transform scale-110"
+                      : "mb-2 bg-white text-customblue hover:bg-gray-50 p-3 rounded-full shadow-sm hover:shadow-md transform hover:scale-105"
+                  } flex items-center justify-center transition-all duration-300`}>
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={selectedCategory === "All" ? "text-white" : "text-customblue"}
+                    >
+                      <rect x="3" y="3" width="7" height="7"/>
+                      <rect x="14" y="3" width="7" height="7"/>
+                      <rect x="14" y="14" width="7" height="7"/>
+                      <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                  </div>
+                  <span className={`text-xs font-medium text-center leading-tight transition-colors duration-300 ${
+                    selectedCategory === "All" 
+                      ? "text-customblue font-bold" 
+                      : "text-gray-700"
+                  }`}>
+                    {t('all')}
+                  </span>
+                </button>
+
+                {categories.map((category) => (
+                  <button
+                    key={category.name}
+                    className="flex flex-col items-center justify-center min-w-[70px] md:min-w-[80px] transition-all duration-300 cursor-pointer flex-shrink-0"
+                    onClick={() => setSelectedCategory(selectedCategory === category.name ? "All" : category.name)}
+                  >
+                    <div className={`${
+                      selectedCategory === category.name
+                        ? "bg-customblue rounded-full p-3 mb-2 shadow-lg transform scale-110"
+                        : "mb-2 bg-white text-customblue hover:bg-gray-50 p-3 rounded-full shadow-sm hover:shadow-md transform hover:scale-105"
+                    } flex items-center justify-center transition-all duration-300`}>
                   {selectedCategory === category.name ? (
                     <Image
                       src={category.icon_onclick}
                       alt={`${category.name} Icon`}
-                      width={20}
-                      height={20}
-                      className={`mb-2 md:mb-3`}
+                          width={24}
+                          height={24}
+                          className="brightness-0 invert"
                     />
                   ) : (
                     <Image
                       src={category.icon}
                       alt={`${category.name} Icon`}
-                      width={20}
-                      height={20}
-                      className={`mb-2 md:mb-5`}
-                    />
-                  )}
-                  <span className="text-xs md:text-sm font-medium">{category.name}</span>
+                          width={24}
+                          height={24}
+                          // style={{ filter: 'hue-rotate(220deg) saturate(1) brightness(0.8)' }}
+                        />
+                      )}
+                    </div>
+                    <span className={`text-xs font-medium text-center leading-tight transition-colors duration-300 ${
+                      selectedCategory === category.name 
+                        ? "text-customblue font-bold" 
+                        : "text-gray-700"
+                    }`}>
+                      {category.name}
+                    </span>
                 </button>
               ))}
+              </div>
             </section>
             {filteredApps.length > 0 ? (
               <>
@@ -495,21 +552,22 @@ export default function Home() {
                                     className="rounded-md"
                                   />
                                 </div>
-                                <div>
+                                <div className="flex-1 min-w-0">
                                   <h2
-                                    className="font-semibold text-gray-800"
+                                    className="font-semibold text-gray-800 truncate"
                                     style={{ fontSize: "14px" }}
                                   >
                                     {app.app_name}
                                   </h2>
-                                  <p className="text-xs md:text-sm text-gray-500">
+                                  <p className="text-xs md:text-sm text-gray-500 truncate">
                                     {app.category} · {app.tags}
                                   </p>
-                                </div>
-                              </div>
                               <p className="text-xs md:text-sm text-gray-500">
                                 {app.view_count || 0} downloads
                               </p>
+                                </div>
+                              </div>
+                             
                             </div>
                           </div>
                         </div>
@@ -560,14 +618,14 @@ export default function Home() {
                                       className="rounded-md"
                                     />
                                   </div>
-                                  <div>
+                                  <div className="flex-1 min-w-0">
                                     <h2
-                                      className="font-semibold text-gray-800"
+                                      className="font-semibold text-gray-800 truncate"
                                       style={{ fontSize: "14px" }}
                                     >
                                       {app.app_name}
                                     </h2>
-                                    <p className="text-xs md:text-sm text-gray-500">
+                                    <p className="text-xs md:text-sm text-gray-500 truncate">
                                       {app.category} · {app.tags}
                                     </p>
                                   </div>
@@ -674,7 +732,7 @@ export default function Home() {
                       className={`mb-2 md:mb-5`}
                     />
                   )}
-                  <span className="text-xs md:text-sm font-medium">{category.name}</span>
+                  <span className="text-xs md:text-sm font-medium text-center">{category.name}</span>
                 </button>
               ))}
             </section>
@@ -720,14 +778,14 @@ export default function Home() {
                                 className="rounded-md"
                               />
                             </div>
-                            <div>
+                            <div className="flex-1 min-w-0">
                               <h2
-                                className="font-semibold text-gray-800"
+                                className="font-semibold text-gray-800 truncate"
                                 style={{ fontSize: "14px" }}
                               >
                                 {app.web_portal}
                               </h2>
-                              <p className="text-xs md:text-sm text-gray-500">
+                              <p className="text-xs md:text-sm text-gray-500 truncate">
                                 {app.category} · {app.tags}
                               </p>
                             </div>
@@ -775,12 +833,12 @@ export default function Home() {
                           />
                         </div>
                         <h3
-                          className="font-semibold text-gray-800"
+                          className="font-semibold text-gray-800 truncate"
                           style={{ fontSize: "12px" }}
                         >
                           {app.web_portal}
                         </h3>
-                        <p className="text-xs md:text-sm text-gray-500">
+                        <p className="text-xs md:text-sm text-gray-500 truncate">
                           {app.category} · {app.tags}
                         </p>
                         <p className="text-xs md:text-sm text-gray-500 mt-1">
@@ -797,6 +855,7 @@ export default function Home() {
             )}
           </>
         )}
+      </div>
       </div>
 
       <Footer />

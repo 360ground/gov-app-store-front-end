@@ -47,16 +47,30 @@ export default function Register() {
   const validatePhoneNumber = (phoneNumber: string) => {
     if (!phoneNumber) return false;
     
-    // Clean the phone number - remove spaces, dashes, etc.
-    const cleanedPhone = phoneNumber.replace(/\s+|-/g, '');
+    // Clean the phone number - remove all non-digit characters except + at the beginning
+    const cleanedPhone = phoneNumber.replace(/[^\d+]/g, '').replace(/\+(?=.*\+)/g, '');
+    
+    console.log('Original phone:', phoneNumber);
+    console.log('Cleaned phone:', cleanedPhone);
     
     // Check if the phone starts with the Ethiopian code +251 followed by 9 digits
     const validInternationalFormat = /^\+251\d{9}$/.test(cleanedPhone);
     
+    // Check if the phone starts with 251 followed by 9 digits (without + sign)
+    const validInternationalWithoutPlus = /^251\d{9}$/.test(cleanedPhone);
+    
     // Check if the phone starts with 0 followed by 9 digits (local format)
     const validLocalFormat = /^0\d{9}$/.test(cleanedPhone);
     
-    return validInternationalFormat || validLocalFormat;
+    // Also check for format without country code (9 digits starting with 9)
+    const validMobileFormat = /^9\d{8}$/.test(cleanedPhone);
+    
+    console.log('Valid international:', validInternationalFormat);
+    console.log('Valid international without +:', validInternationalWithoutPlus);
+    console.log('Valid local:', validLocalFormat);
+    console.log('Valid mobile:', validMobileFormat);
+    
+    return validInternationalFormat || validInternationalWithoutPlus || validLocalFormat || validMobileFormat;
   };
 
   // Handle phone number change

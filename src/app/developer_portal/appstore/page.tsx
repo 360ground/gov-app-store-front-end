@@ -42,6 +42,7 @@ export default function AppSubmissionOverview() {
   const [coverGraphics, setCoverGraphics] = useState<File | null>(null);
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
 
   // Form validation state
   const [errors, setErrors] = useState({
@@ -56,6 +57,7 @@ export default function AppSubmissionOverview() {
     description: "",
     tags: "",
     privacyPolicyUrl: "",
+    webPortalUrl: "",
     screenshots: "",
   });
   
@@ -161,6 +163,9 @@ export default function AppSubmissionOverview() {
       if (!privacyPolicyUrl.trim()) {
         newErrors.privacyPolicyUrl = "Privacy Policy URL is required";
         isValid = false;
+      } else if (!isValidUrl(privacyPolicyUrl)) {
+        newErrors.privacyPolicyUrl = "Please enter a valid URL (e.g., https://example.com/privacy)";
+        isValid = false;
       } else {
         newErrors.privacyPolicyUrl = "";
       }
@@ -207,6 +212,17 @@ export default function AppSubmissionOverview() {
   // Add new state for password change modal
   const [isPasswordChangeModalVisible, setIsPasswordChangeModalVisible] = useState(false);
 
+  // URL validation function
+  const isValidUrl = (url: string): boolean => {
+    try {
+      const urlObj = new URL(url);
+      // Check if protocol is http or https
+      return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+    } catch (error) {
+      return false;
+    }
+  };
+
   // Function to handle file upload
   const handleScreenshotUpload = (index: number, file: File) => {
     if (file.size > 1024 * 1024) {
@@ -221,10 +237,10 @@ export default function AppSubmissionOverview() {
     const objectUrl = URL.createObjectURL(file);
 
     img.onload = () => {
-      // Check image dimensions (e.g., 1280x720 as an example)
-      if (img.width !== 1000 || img.height !== 517) {
+      // Check image dimensions - allow range from 320px to 3840px for both width and height
+      if (img.width < 320 || img.width > 3840 || img.height < 320 || img.height > 3840) {
         setScreenshotErorr(
-          `Screenshot ${index + 1}: Image dimensions must be 1280x720 pixels.`
+          `Screenshot ${index + 1}: Image dimensions must be between 320px and 3840px for both width and height.`
         );
         URL.revokeObjectURL(objectUrl);
         return;
@@ -417,6 +433,44 @@ export default function AppSubmissionOverview() {
   const logoutclick = () => {
     handleLogout(router, "/login");
   };
+
+  // Handle privacy policy URL validation on change
+  const handlePrivacyPolicyUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    setPrivacyPolicyUrl(url);
+    
+    // Real-time validation
+    if (url.trim() && !isValidUrl(url)) {
+      setErrors(prev => ({
+        ...prev,
+        privacyPolicyUrl: "Please enter a valid URL (e.g., https://example.com/privacy)"
+      }));
+    } else {
+      setErrors(prev => ({
+        ...prev,
+        privacyPolicyUrl: ""
+      }));
+    }
+  };
+
+  // Handle web portal URL validation on change
+  const handleWebPortalUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    setWebPortalUrl(url);
+    
+    // Real-time validation (optional field, so only validate if not empty)
+    if (url.trim() && !isValidUrl(url)) {
+      setErrors(prev => ({
+        ...prev,
+        webPortalUrl: "Please enter a valid URL (e.g., https://example.com)"
+      }));
+    } else {
+      setErrors(prev => ({
+        ...prev,
+        webPortalUrl: ""
+      }));
+    }
+  };
   const handleSubmit = async () => {
     // Validate the final step first
     if (!validateCurrentStep()) {
@@ -432,11 +486,37 @@ export default function AppSubmissionOverview() {
 
     console.log(isAndroidChecked);
     if (isAndroidChecked) supportedPlatforms.push("Android");
-    // if (isIOSChecked) supportedPlatforms.push("iOS");
+    if (isIOSChecked) supportedPlatforms.push("IOS");
+    
+    // Validation: Ensure at least one platform is selected
+    if (supportedPlatforms.length === 0) {
+      setErrorMessage("Please select at least one supported platform.");
+      setIsErrorModalVisible(true);
+      setIsLoading(false);
+      return;
+    }
 
+    // Send supported platforms the way Django expects for POST.getlist()
+    if (supportedPlatforms.length > 0) {
+      // Clear any existing entries first
+      formData.delete("supported_platforms");
+      
+      // Send each platform as separate entry - Django will collect them with getlist()
     supportedPlatforms.forEach((platform) => {
       formData.append("supported_platforms", platform);
     });
+    }
+    
+    // Debug: Log what we're sending
+    console.log("Supported Platforms being sent:", supportedPlatforms);
+    console.log("Android checked:", isAndroidChecked);
+    console.log("iOS checked:", isIOSChecked);
+    
+    // Debug: Log FormData contents
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
 
     if (apkFile) formData.append("apk_file", apkFile);
     if (appIcon) formData.append("app_icon", appIcon);
@@ -460,6 +540,7 @@ export default function AppSubmissionOverview() {
     try {
       const accessToken = localStorage.getItem("access_token");
       console.log(accessToken);
+      
               const response = await fetch(buildSubmissionUrl("/apps/submit/"), {
         method: "POST",
         body: formData,
@@ -474,10 +555,32 @@ export default function AppSubmissionOverview() {
         // toast.success("App submitted successfully!");
         setIsLoading(false);
       } else {
-        toast.error(
-          result.error || "Something went wrong while submitting the app."
-        );
         setIsLoading(false);
+        // Handle different types of errors
+        let errorText = "Something went wrong while submitting the app.";
+        
+        if (result.error) {
+          errorText = result.error;
+        } else if (result.errors || result.supported_platforms) {
+          // Handle field-specific errors from Django
+          const errors = [];
+          if (result.supported_platforms) {
+            errors.push(`Supported Platforms: ${result.supported_platforms.join(', ')}`);
+          }
+          if (result.errors) {
+            Object.entries(result.errors).forEach(([field, messages]: [string, any]) => {
+              if (Array.isArray(messages)) {
+                errors.push(`${field}: ${messages.join(', ')}`);
+              } else {
+                errors.push(`${field}: ${messages}`);
+              }
+            });
+          }
+          errorText = errors.length > 0 ? errors.join('\n') : errorText;
+        }
+        
+        setErrorMessage(errorText);
+        setIsErrorModalVisible(true);
       }
     } catch (error) {
       console.error("Error submitting app:", error);
@@ -532,7 +635,7 @@ export default function AppSubmissionOverview() {
           />
           <div>
             <p className="text-lg md:text-2xl font-bold text-blue-600">{stats.total}</p>
-            <p className="text-xs md:text-sm text-[#667085]">ጠቅላላ መተግበሪያዎች</p>
+            <p className="text-xs md:text-sm text-[#667085]">{t('total_apps')}</p>
           </div>
         </div>
         <div className="bg-white shadow rounded p-3 md:p-4 text-center flex flex-col md:flex-row items-center md:gap-4">
@@ -545,7 +648,7 @@ export default function AppSubmissionOverview() {
             <p className="text-lg md:text-2xl font-bold text-green-600">
               {stats.approved}
             </p>
-            <p className="text-xs md:text-sm text-[#667085]">ጸድቋል</p>
+            <p className="text-xs md:text-sm text-[#667085]">{t('approved')}</p>
           </div>
         </div>
         <div className="bg-white shadow rounded p-3 md:p-4 text-center flex flex-col md:flex-row items-center md:gap-4">
@@ -556,7 +659,7 @@ export default function AppSubmissionOverview() {
           />
           <div>
             <p className="text-lg md:text-2xl font-bold text-red-600">{stats.rejected}</p>
-            <p className="text-xs md:text-sm text-[#667085]">ተቀባይነት አላገኘም</p>
+            <p className="text-xs md:text-sm text-[#667085]">{t('rejected')}</p>
           </div>
         </div>
         <div className="bg-white shadow rounded p-3 md:p-4 text-center flex flex-col md:flex-row items-center md:gap-4">
@@ -569,7 +672,7 @@ export default function AppSubmissionOverview() {
             <p className="text-lg md:text-2xl font-bold text-orange-500">
               {stats.pending}
             </p>
-            <p className="text-xs md:text-sm text-[#667085]">በመጠበቅ ላይ</p>
+            <p className="text-xs md:text-sm text-[#667085]">{t('pending')}</p>
           </div>
         </div>
       </div>
@@ -1264,9 +1367,9 @@ export default function AppSubmissionOverview() {
                   </label>
                   <input
                     value={privacyPolicyUrl}
-                    onChange={(e) => setPrivacyPolicyUrl(e.target.value)}
+                    onChange={handlePrivacyPolicyUrlChange}
                     type="url"
-                    placeholder="Enter privacy policy"
+                    placeholder="Enter privacy policy URL (e.g., https://example.com/privacy)"
                     className={`text-black w-full px-3 md:px-4 py-2 border ${errors.privacyPolicyUrl ? "border-red-500" : "border-gray-300"} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-customblue focus:border-customblue transition ease-in-out duration-150 text-sm md:text-base`}
                   />
                   {errors.privacyPolicyUrl && (
@@ -1279,11 +1382,14 @@ export default function AppSubmissionOverview() {
                   </label>
                   <input
                     value={webPortalUrl}
-                    onChange={(e) => setWebPortalUrl(e.target.value)}
+                    onChange={handleWebPortalUrlChange}
                     type="url"
-                    placeholder="Enter web portal URL"
-                    className="text-black w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-customblue focus:border-customblue transition ease-in-out duration-150 text-sm md:text-base"
+                    placeholder="Enter web portal URL (e.g., https://example.com)"
+                    className={`text-black w-full px-3 md:px-4 py-2 border ${errors.webPortalUrl ? "border-red-500" : "border-gray-300"} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-customblue focus:border-customblue transition ease-in-out duration-150 text-sm md:text-base`}
                   />
+                  {errors.webPortalUrl && (
+                    <p className="text-red-500 text-xs md:text-sm mt-1">{errors.webPortalUrl}</p>
+                  )}
                 </div>
               </form>
             </div>
@@ -1662,6 +1768,107 @@ export default function AppSubmissionOverview() {
             : renderSubmitApp()}
         </main>
       </div>
+
+      {/* App Submission Success Modal */}
+      {isModalVisible && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <svg
+                  className="w-8 h-8 text-green-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                {t('submission_successful') || 'App Submitted Successfully!'}
+              </h3>
+              <p className="text-gray-600 text-center mb-6">
+                {t('submission_message') || 'Your app has been submitted for review. You will be notified once the review process is complete.'}
+              </p>
+              <div className="flex justify-center">
+                <button
+                  onClick={() => {
+                    setIsModalVisible(false);
+                    window.location.reload();
+                    setCurrentView("overview"); // Navigate back to overview
+                    // Reset form after successful submission
+                    
+                    // setActiveStep(1);
+                    // setAppName("");
+                    // setAppVersion("");
+                    // setCategory("");
+                    // setDescription("");
+                    // setTags("");
+                    // setPrivacyPolicyUrl("");
+                    // setReleaseNotes("");
+                    // setWebPortalUrl("");
+                    // setApkFile(null);
+                    // setAppIcon(null);
+                    // setCoverGraphics(null);
+                    // setScreenshots([]);
+                    // setIosurl("");
+                  }}
+                  className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                >
+                  {t('ok') || 'OK'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* App Submission Error Modal */}
+      {isErrorModalVisible && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <svg
+                  className="w-8 h-8 text-red-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                {t('submission_failed') || 'Submission Failed'}
+              </h3>
+              <p className="text-gray-600 text-center mb-6 whitespace-pre-line">
+                {errorMessage}
+              </p>
+              <div className="flex justify-center">
+                <button
+                  onClick={() => {
+                    setIsErrorModalVisible(false);
+                    setErrorMessage("");
+                  }}
+                  className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                >
+                  {t('ok') || 'OK'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
