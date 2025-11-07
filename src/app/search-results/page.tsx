@@ -235,14 +235,14 @@ function SearchResultsContent() {
                           className="rounded-md"
                         />
                       </div>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h2
-                          className="font-semibold text-gray-800"
+                          className="font-semibold text-gray-800 truncate"
                           style={{ fontSize: "14px" }}
                         >
                           {app.app_name}
                         </h2>
-                        <p className="text-xs md:text-sm text-gray-500">
+                        <p className="text-xs md:text-sm text-gray-500 truncate">
                           {app.category} · {app.tags}
                         </p>
                       </div>

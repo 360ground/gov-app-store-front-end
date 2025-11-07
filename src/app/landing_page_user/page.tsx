@@ -515,7 +515,7 @@ export default function Home() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                     {filteredApps
                       .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
-                      .slice(0, 6)
+                      .slice(0, 10)
                       .map((app) => (
                         <div
                           onClick={() => handleAppClick(app.id)}
@@ -542,7 +542,7 @@ export default function Home() {
                           <div className="p-3 md:p-4">
                             {/* App Icon and Title */}
                             <div className="flex items-start justify-between">
-                              <div className="flex items-center space-x-3 md:space-x-4">
+                              <div className="flex items-center space-x-3 md:space-x-4 flex-1 min-w-0">
                                 <div className="w-10 h-10 md:w-12 md:h-12">
                                   <Image
                                     src={buildMediaUrl(`${app.app_icon}`, true)}
@@ -562,12 +562,11 @@ export default function Home() {
                                   <p className="text-xs md:text-sm text-gray-500 truncate">
                                     {app.category} · {app.tags}
                                   </p>
-                              <p className="text-xs md:text-sm text-gray-500">
-                                {app.view_count || 0} downloads
-                              </p>
                                 </div>
                               </div>
-                             
+                              <p className="text-xs md:text-sm text-gray-500 ml-2">
+                                {app.view_count || 0} downloads
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -576,12 +575,12 @@ export default function Home() {
                 </section>
 
                 {/* Additional apps section */}
-                {filteredApps.length > 6 && (
+                {filteredApps.length > 10 && (
                   <section className="px-2 md:px-6 py-4 md:py-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                       {filteredApps
                         .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
-                        .slice(6)
+                        .slice(10)
                         .map((app) => (
                           <div
                             onClick={() => handleAppClick(app.id)}
@@ -608,7 +607,7 @@ export default function Home() {
                             <div className="p-3 md:p-4">
                               {/* App Icon and Title */}
                               <div className="flex items-start justify-between">
-                                <div className="flex items-center space-x-3 md:space-x-4">
+                                <div className="flex items-center space-x-3 md:space-x-4 flex-1 min-w-0">
                                   <div className="w-10 h-10 md:w-12 md:h-12">
                                     <Image
                                       src={buildMediaUrl(`${app.app_icon}`, true)}
@@ -630,7 +629,7 @@ export default function Home() {
                                     </p>
                                   </div>
                                 </div>
-                                <p className="text-xs md:text-sm text-gray-500">
+                                <p className="text-xs md:text-sm text-gray-500 ml-2">
                                   {app.view_count || 0} downloads
                                 </p>
                               </div>
@@ -668,22 +667,22 @@ export default function Home() {
                         key={app.id}
                         className="p-2 md:p-4 rounded cursor-pointer hover:shadow-lg transition-shadow duration-300"
                       >
-                        <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5">
+                        <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5 p-2">
                           <Image
                             src={buildMediaUrl(`${app.cover_graphics}`, true)}
                             alt={app.app_name}
                             width={300}
                             height={200}
-                            className="object-cover w-full h-full"
+                            className="object-cover w-full h-full rounded-md"
                           />
                         </div>
                         <h3
-                          className="font-semibold text-gray-800"
+                          className="font-semibold text-gray-800 truncate"
                           style={{ fontSize: "12px" }}
                         >
                           {app.app_name}
                         </h3>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 truncate">
                           {app.category} • {app.tags}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
@@ -823,13 +822,13 @@ export default function Home() {
                         key={app.id}
                         className="p-2 md:p-4 rounded"
                       >
-                        <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5">
-                                                  <Image
-                          src={buildMediaUrl(`${app.cover_graphics}`, true)} // Assuming cover_graphics is the relative URL
+                        <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5 p-2">
+                          <Image
+                            src={buildMediaUrl(`${app.cover_graphics}`, true)} // Assuming cover_graphics is the relative URL
                             alt={app.app_name}
                             width={300} // Width for the image
                             height={200} // Height for the image to fit in the container
-                            className="object-cover w-full h-full" // Ensures the image covers the container
+                            className="object-cover w-full h-full rounded-md" // Ensures the image covers the container
                           />
                         </div>
                         <h3

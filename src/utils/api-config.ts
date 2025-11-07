@@ -9,7 +9,7 @@ export const API_URLS = {
   BACKEND: process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://127.0.0.1:8000',
   
   // Alternative backend for app listings and search
-  APP_API: process.env.NEXT_PUBLIC_APP_API_URL || 'http://196.189.50.23:8080',
+  APP_API: process.env.NEXT_PUBLIC_APP_API_URL || 'http://127.0.0.1:8000',
   
   // App submission API
   APP_SUBMISSION: process.env.NEXT_PUBLIC_APP_SUBMISSION_API_URL || 'http://localhost:8000',
