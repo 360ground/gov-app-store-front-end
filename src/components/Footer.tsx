@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import Image from 'next/image';
 
 const Footer: React.FC = () => {
   const { t } = useLanguage();
@@ -8,24 +9,31 @@ const Footer: React.FC = () => {
     <footer className="bg-gray-100 py-4 md:py-5 px-4 md:px-10">
       <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-4">
         {/* Logo Section */}
-        <div className="flex flex-col items-start w-full md:w-auto">
+        <div className="flex flex-col space-y-3 items-start w-full md:w-auto">
+          <Image 
+            src="/efdri.svg" 
+            alt="Logo" 
+            width={35} 
+            height={25} 
+            className="object-contain h-full"
+          />
           <p style={{ fontSize: "12px", color: "black" }}>
             {t('copyright').replace('{year}', new Date().getFullYear().toString())}
           </p>
-          <div className="flex justify-start space-x-4 mt-2 text-black">
+          <div className="flex justify-start space-x-4 mt-2 text-black items-center">
             <a
               href="#"
-              className="hover:text-blue-600 transition-colors duration-300"
+              className="text-blue-700 hover:text-blue-500 transition-colors duration-300"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
               </svg>
             </a>
             <a
               href="#"
-              className="hover:text-blue-400 transition-colors duration-300"
+              className="hover:text-blue-500 transition-colors duration-300"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -35,7 +43,7 @@ const Footer: React.FC = () => {
             </a>
             <a
               href="#"
-              className="hover:text-blue-700 transition-colors duration-300"
+              className="text-blue-700 hover:text-blue-500 transition-colors duration-300"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -99,9 +107,15 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="border-t border-gray-700 pt-4 text-black">
+      <div className="border-t border-gray-700 pt-4 text-black flex justify-between text-[12px]">
         <p style={{ fontSize: "12px" }}>
-          {t('copyright').replace('{year}', new Date().getFullYear().toString())} | {t('privacy_policy')} | {t('copyright_policy')} | {t('terms')}
+          {t('copyright_bottom').replace('{year}', new Date().getFullYear().toString())} 
+        </p>
+        <p >
+          {t('privacy_policy')}  |  {t('copyright_policy')}  |  {t('terms')}
+        </p>
+        <p >
+          Ethiopia
         </p>
       </div>
     </footer>

@@ -7,6 +7,8 @@ import { handleLogout } from "@/utils/auth";
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
 import Footer from '@/components/Footer';
+import { FaAndroid } from "react-icons/fa";
+import { RiAppStoreLine } from "react-icons/ri";
 
 export interface AppData {
   id: number;
@@ -34,6 +36,7 @@ export default function Home() {
   const [username, setUsername] = useState<string | null>("");
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  
 
   // Map of category display names to backend values
   const categoryMap = {
@@ -226,7 +229,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header - Made responsive */}
-      <header className="flex flex-col md:flex-row justify-between items-center px-4 md:px-6 py-4 bg-gray-100 gap-4">
+      <header className="flex flex-col md:flex-row justify-between items-center px-4 md:px-6 py-4 bg-[#F5F5F7] gap-4">
         <div className="flex items-center space-x-4 w-full md:w-auto justify-between md:justify-start">
           <div className="flex items-center space-x-4">
             <Image 
@@ -237,10 +240,30 @@ export default function Home() {
               className="object-contain h-full"
             />
 
-            <div className="flex flex-col pr-2 md:pr-10">
-              <h1 className="text-black" style={{fontSize: "16px", color:"#767676"}}>{t('government_appstore')}</h1>
-              <h1 className="text-black" style={{fontSize: "12px", color:"#767676"}}>{t('official_appstore_fdre')}</h1>
+            <div className="flex flex-col pr-2 md:pr-5">
+              <h1 className="font-semibold text-[#767676]">{t('government_appstore')}</h1>
+              <h1 className="text-[#767676] text-[11px]" >{t('official_appstore_fdre')}</h1>
             </div>
+            <button
+              className={`px-4 md:px-0  pb-4 text-sm font-semibold ${
+                activeTab === "Mobile Apps"
+                  ? "text-customblue border-b-2 border-customblue"
+                  : "text-black"
+              } cursor-pointer`}
+              onClick={() => setActiveTab("Mobile Apps")}
+            >
+              {t('mobile_apps')}
+            </button>
+            <button
+              className={`px-4  md:px-0 pb-4 text-sm font-semibold ${
+                activeTab === "Web Portal"
+                  ? "text-customblue border-b-2 border-customblue"
+                  : "text-black"
+              } cursor-pointer`}
+              onClick={() => setActiveTab("Web Portal")}
+            >
+              {t('web_portal')}
+            </button>
           </div>
 
           {/* Mobile login button */}
@@ -253,28 +276,7 @@ export default function Home() {
         </div>
 
         {/* Tabs - Responsive design */}
-        <div className="flex justify-center w-full md:w-auto">
-          <button
-            className={`px-4 md:px-6 py-3 text-sm font-semibold ${
-              activeTab === "Mobile Apps"
-                ? "text-customblue border-b-2 border-customblue font-bold"
-                : "text-gray-500"
-            } cursor-pointer`}
-            onClick={() => setActiveTab("Mobile Apps")}
-          >
-            {t('mobile_apps')}
-          </button>
-          <button
-            className={`px-4 md:px-6 py-3 text-sm font-semibold ${
-              activeTab === "Web Portal"
-                ? "text-customblue border-b-2 border-customblue font-bold"
-                : "text-gray-500"
-            } cursor-pointer`}
-            onClick={() => setActiveTab("Web Portal")}
-          >
-            {t('web_portal')}
-          </button>
-        </div>
+        
 
         <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
           <input
@@ -381,17 +383,11 @@ export default function Home() {
                 className={`${
                   selectedPlatform === "android"
                     ? "bg-customblue text-white"
-                    : "bg-white text-customblue border border-customblue"
+                    : "bg-white text-customblue hover:text-white border border-customblue "
                 } px-4 md:px-8 py-1 rounded-[20px] hover:bg-customblue transition duration-300 flex items-center space-x-2 text-xs md:text-sm cursor-pointer`}
                 onClick={() => setSelectedPlatform("android")}
               >
-                <Image
-                  src={selectedPlatform === "android" ? "/android.svg" : "/android_nw.svg"}  
-                  alt={t('android_icon')}
-                  width={16}
-                  height={16}
-                  className={selectedPlatform === "android" ? "brightness-0 invert" : ""}
-                />
+                <FaAndroid className="text-base"/>
                 <span>{t('android')}</span>
               </button>
 
@@ -403,47 +399,47 @@ export default function Home() {
                 className={`${
                   selectedPlatform === "IOS"
                     ? "bg-customblue text-white"
-                    : "bg-white text-customblue border border-customblue"
+                    : "bg-white text-customblue hover:text-white border border-customblue"
                 } px-4 md:px-8 py-1 rounded-[20px] hover:bg-customblue transition duration-300 flex items-center space-x-2 text-xs md:text-sm cursor-pointer`}
                 onClick={() => setSelectedPlatform("IOS")}
               >
-                <Image
-                  src={selectedPlatform === "IOS" ? "/ios_new.svg" : "/ios.svg"} 
-                  alt={t('ios_icon')}
-                  width={16}
-                  height={16}
-                  className={selectedPlatform === "IOS" ? "brightness-0 invert" : ""}
-                />
+                <RiAppStoreLine className="text-base"/>
                 <span>{t('ios')}</span>
               </button>
             </section>
-            <section className="flex px-2 md:px-6 space-x-1 md:space-x-4 flex-wrap gap-1 md:gap-2 justify-center md:justify-start">
+            <section className="flex justify-between flex-wrap">
               {categories.map((category) => (
                 <button
                   key={category.name}
                   className={`${
                     selectedCategory === category.name
-                      ? "bg-customblue text-white"
-                      : "bg-white text-customblue"
-                  } flex flex-col items-center justify-center w-[80px] h-[80px] md:w-[100px] md:h-[100px] rounded-[8px] hover:bg-customblue transition duration-300 cursor-pointer`}
+                      ? " text-customblue"
+                      : "bg-white text-black"
+                  } flex flex-col items-center justify-center w-[80px] h-[80px] md:w-[100px] md:h-[100px] rounded-[8px] transition duration-300 cursor-pointer`}
                   onClick={() => setSelectedCategory(category.name)}
                 >
                   {selectedCategory === category.name ? (
+                    <div className=" bg-customblue p-3 rounded-full">
                     <Image
                       src={category.icon_onclick}
                       alt={`${category.name} Icon`}
                       width={20}
                       height={20}
-                      className={`mb-2 md:mb-3`}
+                      className={` text-customblue`}
                     />
+                    </div>
                   ) : (
-                    <Image
-                      src={category.icon}
-                      alt={`${category.name} Icon`}
-                      width={20}
-                      height={20}
-                      className={`mb-2 md:mb-5`}
-                    />
+                    <div className="p-3 hover:bg-customblue rounded-full group">
+                      <Image
+                        src={selectedCategory === category.name ? category.icon_onclick : category.icon}
+                        alt={`${category.name} Icon`}
+                        width={20}
+                        height={20}
+                        className={selectedCategory === category.name
+                        ? "brightness-0 invert" // Selected state: Icon is white
+                        : "group-hover:brightness-0 group-hover:invert"}
+                      />
+                    </div>
                   )}
                   <span className="text-xs md:text-sm font-medium">{category.name}</span>
                 </button>
@@ -452,7 +448,7 @@ export default function Home() {
             {filteredApps.length > 0 ? (
               <>
                 <section className="px-2 md:px-6 py-4 md:py-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 ">
                     {filteredApps
                       .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
                       .slice(0, 6)
@@ -460,7 +456,7 @@ export default function Home() {
                         <div
                           onClick={() => handleAppClick(app.id)}
                           key={app.id}
-                          className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 cursor-pointer hover:shadow-lg transition-shadow duration-300"
+                          className="bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100 cursor-pointer hover:shadow-xl shadow-[#f7f3f3] hover:shadow-[#f7f3f3] transition-transform duration-300 hover:scale-[1.01] ease-in-out"
                         >
                           {/* Image section */}
                           <div
@@ -643,33 +639,39 @@ export default function Home() {
       <div className="mx-2 md:mx-6 lg:mx-10">
         {activeTab === "Web Portal" && (
           <>
-            <section className="flex px-2 md:px-6 py-4 md:py-4 space-x-1 md:space-x-4 flex-wrap gap-1 md:gap-4 justify-center md:justify-start">
+            <section className="flex justify-between flex-wrap">
               {categories.map((category) => (
                 <button
                   key={category.name}
                   className={`${
                     selectedCategory === category.name
-                      ? "bg-customblue text-white"
-                      : "bg-white text-customblue"
-                  } flex flex-col items-center justify-center w-[80px] h-[80px] md:w-[100px] md:h-[120px] rounded-[8px] hover:bg-customblue transition duration-300 cursor-pointer`}
+                      ? " text-customblue"
+                      : "bg-white text-black"
+                  } flex flex-col items-center justify-center w-[80px] h-[80px] md:w-[100px] md:h-[100px] rounded-[8px] transition duration-300 cursor-pointer`}
                   onClick={() => setSelectedCategory(category.name)}
                 >
                   {selectedCategory === category.name ? (
-                    <Image
-                      src={category.icon_onclick}
-                      alt={`${category.name} Icon`}
-                      width={20}
-                      height={20}
-                      className={`mb-2 md:mb-5`}
-                    />
+                    <div className=" bg-customblue p-3 rounded-full">
+                      <Image
+                        src={category.icon_onclick}
+                        alt={`${category.name} Icon`}
+                        width={20}
+                        height={20}
+                        className="text-customblue"
+                      />
+                    </div>
                   ) : (
-                    <Image
-                      src={category.icon}
-                      alt={`${category.name} Icon`}
-                      width={20}
-                      height={20}
-                      className={`mb-2 md:mb-5`}
-                    />
+                    <div className="p-3 hover:bg-customblue rounded-full group">
+                      <Image
+                        src={selectedCategory === category.name ? category.icon_onclick : category.icon}
+                        alt={`${category.name} Icon`}
+                        width={20}
+                        height={20}
+                        className={selectedCategory === category.name
+                        ? "brightness-0 invert" // Selected state: Icon is white
+                        : "group-hover:brightness-0 group-hover:invert"}
+                      />
+                    </div>
                   )}
                   <span className="text-xs md:text-sm font-medium">{category.name}</span>
                 </button>
