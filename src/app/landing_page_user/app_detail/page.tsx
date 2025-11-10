@@ -10,6 +10,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
 import Footer from '@/components/Footer';
+import { buildBackendUrl,buildMediaUrl } from '@/utils/api-config';
+
 
 export default function AppDetails() {
   const { t } = useLanguage();
@@ -29,6 +31,8 @@ export default function AppDetails() {
   const [newReview, setNewReview] = React.useState({ content: "", rating: 5 });
   const [hoveredRating, setHoveredRating] = React.useState(0);
   const [isReviewSuccessModalVisible, setIsReviewSuccessModalVisible] = useState(false);
+  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
+  const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0);
 
   useEffect(() => {
     // Add this block to check authentication state for user-specific features
@@ -54,12 +58,12 @@ export default function AppDetails() {
     if (id) {
       // Fetch app details based on the id from the backend
       const fetchAppDetails = async () => {
-        try {
-          const response = await fetch(
-            `http://127.0.0.1:8000/apps/listing/${id}`
-          );
-          const data = await response.json();
-          setAppDetails(data); // Set fetched data to state
+              try {
+        const response = await fetch(
+          buildBackendUrl(`/apps/listing/${id}`)
+        );
+        const data = await response.json();
+        setAppDetails(data); // Set fetched data to state
 
           // Fetch related apps using the same endpoint as landing page
           if (data.category) {
@@ -67,9 +71,9 @@ export default function AppDetails() {
               category: data.category,
               exclude: id
             });
-            const relatedResponse = await fetch(
-              `http://127.0.0.1:8000/apps/search?${queryParams.toString()}`
-            );
+                    const relatedResponse = await fetch(
+          buildBackendUrl(`/apps/search?${queryParams.toString()}`)
+        );
             const relatedData = await relatedResponse.json();
             setAppDetails((prev: any) => ({
               ...prev,
@@ -84,6 +88,54 @@ export default function AppDetails() {
       fetchAppDetails();
     }
   }, [id]); // Run when the id changes
+
+  // Screenshot preview functions
+  const openScreenshotPreview = (screenshot: string, index: number) => {
+    setSelectedScreenshot(screenshot);
+    setCurrentScreenshotIndex(index);
+  };
+
+  const closeScreenshotPreview = () => {
+    setSelectedScreenshot(null);
+  };
+
+  const navigateScreenshot = (direction: 'prev' | 'next') => {
+    if (!appDetails?.screenshots) return;
+    
+    const total = appDetails.screenshots.length;
+    let newIndex = currentScreenshotIndex;
+    
+    if (direction === 'prev') {
+      newIndex = currentScreenshotIndex === 0 ? total - 1 : currentScreenshotIndex - 1;
+    } else {
+      newIndex = currentScreenshotIndex === total - 1 ? 0 : currentScreenshotIndex + 1;
+    }
+    
+    setCurrentScreenshotIndex(newIndex);
+    setSelectedScreenshot(appDetails.screenshots[newIndex].screenshot);
+  };
+
+  // Keyboard navigation for screenshot preview
+  useEffect(() => {
+    if (!selectedScreenshot) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'Escape':
+          closeScreenshotPreview();
+          break;
+        case 'ArrowLeft':
+          navigateScreenshot('prev');
+          break;
+        case 'ArrowRight':
+          navigateScreenshot('next');
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [selectedScreenshot, appDetails?.screenshots, currentScreenshotIndex]);
 
   if (!appDetails) {
     return (
@@ -107,7 +159,7 @@ export default function AppDetails() {
     if (newReview.content.trim()) {
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/apps/reviews/${appDetails.id}/`,
+          buildBackendUrl(`/apps/reviews/${appDetails.id}/`),
           {
             method: "POST",
             headers: {
@@ -158,7 +210,7 @@ export default function AppDetails() {
   const fetchUpdatedReviews = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/apps/listing/${id}`
+        buildBackendUrl(`/apps/listing/${id}`)
       );
       const data = await response.json();
       // Update only the reviews part of appDetails
@@ -180,6 +232,8 @@ export default function AppDetails() {
     }
   };
 
+
+
   return (
     <main className="min-h-screen bg-white">
       <Toaster />
@@ -200,7 +254,10 @@ export default function AppDetails() {
           </button>
         </div>
       </header>
-      <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-6 px-4 md:px-10 lg:px-20 py-6 md:py-10">
+      
+      {/* Main content container with left-aligned layout and right spacing */}
+      <div className="max-w-4xl pl-12 md:pl-20 lg:pl-20 pr-12 md:pr-20 lg:pr-32">
+          <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8 py-8 md:py-12">
         <img
           src={appDetails.app_icon || "/eodb.jpg"} // Display fetched app icon
           alt="App Icon"
@@ -259,38 +316,51 @@ export default function AppDetails() {
       </div>
 
       {/* Screenshots */}
-      <section className="mt-8 md:mt-12 lg:mt-20 px-4 md:px-10 lg:px-20">
-        <h2 className="text-gray-800 font-bold mb-3 md:mb-5" style={{ fontSize: "18px" }}>
+        <section className="mt-8 md:mt-12 lg:mt-2">
+          <h2 className="text-gray-800 font-bold mb-4 md:mb-6" style={{ fontSize: "18px" }}>
           {t('screenshots')}
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
           {appDetails.screenshots?.map(
             (screenshot: {
               id: Key | null | undefined;
               screenshot: string | undefined;
-            }) => (
-              <img
+              }, index: number) => (
+                <div
                 key={screenshot.id}
+                  className="flex-shrink-0 rounded-lg shadow-lg overflow-hidden bg-gray-100 cursor-pointer hover:shadow-xl transition-shadow duration-300"
+                  style={{ 
+                    width: "200px", 
+                    height: "400px",
+                    minWidth: "200px"
+                  }}
+                  onClick={() => openScreenshotPreview(screenshot.screenshot || '', index)}
+                >
+                  <img
                 src={screenshot.screenshot}
                 alt={`App Screenshot ${screenshot.id}`}
-                className="rounded-lg shadow-md w-full"
-                style={{ height: "auto", maxHeight: "300px", objectFit: "cover" }}
+                    className="w-full h-full"
+                    style={{ 
+                      objectFit: "contain",
+                      objectPosition: "center"
+                    }}
               />
+                </div>
             )
           )}
         </div>
       </section>
 
       {/* About */}
-      <section className="mt-8 md:mt-12 lg:mt-20 px-4 md:px-10 lg:px-20">
-        <h2 className="text-gray-800 font-bold mb-3 md:mb-4" style={{ fontSize: "18px" }}>
+        <section className="mt-8 md:mt-12 lg:mt-16">
+          <h2 className="text-gray-800 font-bold mb-4 md:mb-6" style={{ fontSize: "18px" }}>
           {t('about_app')}
         </h2>
-        <p className="text-gray-700 text-sm md:text-base">{appDetails.description}</p>
+          <p className="text-gray-700 text-sm md:text-base leading-relaxed">{appDetails.description}</p>
       </section>
 
       {/* Ratings and Reviews */}
-      <section className="mt-8 md:mt-12 lg:mt-20 px-4 md:px-10 lg:px-20 mb-10 md:mb-20">
+        <section className="mt-8 md:mt-12 lg:mt-16 mb-8 md:mb-12">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
           <div className="flex items-center gap-2">
             <h2 className="text-gray-800 font-bold" style={{ fontSize: "18px" }}>
@@ -497,11 +567,11 @@ export default function AppDetails() {
       </section>
 
       {/* Related Apps Section */}
-      <section className="mt-8 md:mt-12 lg:mt-20 px-4 md:px-10 lg:px-20 mb-10 md:mb-20">
-        <h2 className="text-gray-800 font-bold mb-4" style={{ fontSize: "16px" }}>
+        <section className="mt-8 md:mt-12 lg:mt-16 mb-8 md:mb-12">
+          <h2 className="text-gray-800 font-bold mb-4 md:mb-6" style={{ fontSize: "16px" }}>
           {t('related_apps')}
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
           {appDetails.related_apps
             ?.filter((app: any) => app.id !== appDetails.id) // Exclude current app
             .map((app: any) => (
@@ -509,7 +579,7 @@ export default function AppDetails() {
                 key={app.id}
                 onClick={() => {
                   // Increment view count for the clicked app
-                  fetch(`http://127.0.0.1:8000/apps/increment-view-count/`, {
+                  fetch(buildBackendUrl(`/apps/increment-view-count/`), {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
@@ -520,21 +590,21 @@ export default function AppDetails() {
                   // Navigate to the app details page
                   router.push(`/landing_page_user/app_detail?id=${app.id}`);
                 }}
-                className="p-2 md:p-4 rounded cursor-pointer hover:bg-gray-50 transition-colors duration-300"
+                  className="p-2 md:p-3 rounded cursor-pointer hover:bg-gray-50 transition-colors duration-300"
               >
-                <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5">
+                  <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-3">
                   <Image
-                    src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                    src={buildMediaUrl(`${app.cover_graphics}`)}
                     alt={app.app_name}
                     width={300}
                     height={200}
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <h3 className="font-semibold text-gray-800" style={{ fontSize: "12px" }}>
+                  <h3 className="font-semibold text-gray-800 truncate" style={{ fontSize: "12px" }}>
                   {app.app_name}
                 </h3>
-                <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 truncate">
                   {app.category} • {app.tags}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
@@ -544,6 +614,67 @@ export default function AppDetails() {
             ))}
         </div>
       </section>
+      </div>
+
+      {/* Screenshot Preview Modal */}
+      {selectedScreenshot && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+          onClick={closeScreenshotPreview}
+        >
+          <div className="relative max-w-4xl max-h-full flex items-center justify-center">
+            {/* Close button */}
+            <button
+              onClick={closeScreenshotPreview}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+              style={{ fontSize: "24px" }}
+            >
+              ✕
+            </button>
+            
+            {/* Previous button */}
+            {appDetails.screenshots && appDetails.screenshots.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateScreenshot('prev');
+                }}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 text-4xl z-10"
+              >
+                ‹
+              </button>
+            )}
+            
+            {/* Screenshot image */}
+            <img
+              src={selectedScreenshot}
+              alt="Screenshot Preview"
+              className="max-w-full max-h-full object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+            
+            {/* Next button */}
+            {appDetails.screenshots && appDetails.screenshots.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateScreenshot('next');
+                }}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 text-4xl z-10"
+              >
+                ›
+              </button>
+            )}
+            
+            {/* Screenshot indicator */}
+            {appDetails.screenshots && appDetails.screenshots.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm">
+                {currentScreenshotIndex + 1} / {appDetails.screenshots.length}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <Footer />
     </main>

@@ -8,6 +8,7 @@ import { handleLogout } from "@/utils/auth";
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
 import Footer from '@/components/Footer';
+import { buildAppApiUrl, buildMediaUrl } from "@/utils/api-config";
 
 export interface AppData {
   id: number;
@@ -50,9 +51,9 @@ function SearchResultsContent() {
     const fetchSearchResults = async () => {
       if (query) {
         try {
-          const response = await fetch(
-            `http://127.0.0.1:8000/apps/search/?query=${query}`
-          );
+                const response = await fetch(
+        buildAppApiUrl(`/apps/search/?query=${query}`)
+      );
           if (response.ok) {
             const data = await response.json();
             setApps(data);
@@ -86,7 +87,7 @@ function SearchResultsContent() {
   const handleAppClick = async (id: number) => {
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/apps/increment-view-count/",
+        buildAppApiUrl("/apps/increment-view-count/"),
         {
           method: "POST",
           headers: {
@@ -214,7 +215,7 @@ function SearchResultsContent() {
                     }}
                   >
                     <Image
-                      src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                      src={buildMediaUrl(`${app.cover_graphics}`, true)}
                       alt={app.app_name}
                       layout="fill"
                       objectFit="contain"
@@ -227,21 +228,21 @@ function SearchResultsContent() {
                     <div className="flex items-center space-x-3 md:space-x-4">
                       <div className="w-10 h-10 md:w-12 md:h-12">
                         <Image
-                          src={`http://127.0.0.1:8000${app.app_icon}`}
+                          src={buildMediaUrl(`${app.app_icon}`, true)}
                           alt={`${app.app_name} ${t('icon')}`}
                           width={48}
                           height={48}
                           className="rounded-md"
                         />
                       </div>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h2
-                          className="font-semibold text-gray-800"
+                          className="font-semibold text-gray-800 truncate"
                           style={{ fontSize: "14px" }}
                         >
                           {app.app_name}
                         </h2>
-                        <p className="text-xs md:text-sm text-gray-500">
+                        <p className="text-xs md:text-sm text-gray-500 truncate">
                           {app.category} · {app.tags}
                         </p>
                       </div>

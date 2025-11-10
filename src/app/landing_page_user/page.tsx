@@ -53,19 +53,19 @@ export default function Home() {
 
   const images = [
     {
-      src: "/main_banner.png",
+      src: "/banner1.svg",
       caption: t('welcome_banner'),
     },
     {
-      src: "/banner_top.png",
+      src: "/banner1.svg",
       caption: t('explore_apps'),
     },
     {
-      src: "/banner_bot_1.png",
+      src: "/banner1.svg",
       caption: t('simplifying_governance'),
     },
     {
-      src: "/banner_bot_2.png",
+      src: "/banner1.svg",
       caption: t('empowering_citizens'),
     },
   ];
@@ -76,7 +76,7 @@ export default function Home() {
     } else {
       console.log("Fetching all apps...");
       try {
-        const response = await fetch("http://127.0.0.1:8000/apps/listing");
+        const response = await fetch(buildAppApiUrl("/apps/listing"));
         if (response.ok) {
           const data = await response.json();
           setApps(data);
@@ -115,9 +115,9 @@ export default function Home() {
         });
 
         // Send request to the backend with the filters
-        const response = await fetch(
-          `http://127.0.0.1:8000/apps/search?${queryParams.toString()}`
-        );
+              const response = await fetch(
+        buildAppApiUrl(`/apps/search?${queryParams.toString()}`)
+      );
         if (response.ok) {
           const data = await response.json();
           setApps(data);
@@ -140,42 +140,42 @@ export default function Home() {
     },
     {
       name: t('finance'),
-      icon: "/finance.png",
+      icon: "/finance.svg",
       icon_onclick: "/finance_white.png",
     },
     { 
       name: t('health'), 
-      icon: "/health.png", 
+      icon: "/health.svg", 
       icon_onclick: "/health_white.png" 
     },
     {
       name: t('agriculture'),
-      icon: "/agri.png",
+      icon: "/agri.svg",
       icon_onclick: "/agriculture_white.png",
     },
     { 
       name: t('trade'), 
-      icon: "/trade.png", 
+      icon: "/trade.svg", 
       icon_onclick: "/trade_white.png" 
     },
     {
       name: t('technology'),
-      icon: "/technology.png",
+      icon: "/technology.svg",
       icon_onclick: "/technology_white.png",
     },
     {
       name: t('social'),
-      icon: "/social.png",
+      icon: "/social_affair.svg",
       icon_onclick: "/social_white.png",
     },
     {
       name: t('justice'),
-      icon: "/justice.png",
+      icon: "/justice.svg",
       icon_onclick: "/justice_white.png",
     },
     {
       name: t('logistics'),
-      icon: "/logistic.png",
+      icon: "/logistic.svg",
       icon_onclick: "/logistic_white.png",
     },
   ];
@@ -201,7 +201,7 @@ export default function Home() {
       console.log(id);
       console.log(id);
       var response = await fetch(
-        "http://127.0.0.1:8000/apps/increment-view-count/",
+        buildAppApiUrl("/apps/increment-view-count/"),
         {
           method: "POST",
           headers: {
@@ -236,8 +236,8 @@ export default function Home() {
               src="/efdri.svg" 
               alt="Logo" 
               width={40} 
-              height={30} 
-              className="object-contain h-full"
+              height={40} 
+              className="object-contain"
             />
 
             <div className="flex flex-col pr-2 md:pr-5">
@@ -305,9 +305,11 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Main Container with max-width 1200px */}
+      <div className="max-w-[1200px] mx-auto">
       <section className="w-full bg-white py-4 px-4 md:px-10">
       {/* Top Full-Width Image - Made responsive */}
-      <div className="relative w-full h-[30vh] md:h-[40vh] lg:h-[60vh] overflow-hidden rounded-2xl">
+      <div className="relative w-full h-[25vh] md:h-[30vh] lg:h-[54vh] overflow-hidden rounded-2xl">
         {/* Current Image */}
         <div className="relative w-full h-full rounded-2xl overflow-hidden">
           <Image
@@ -318,11 +320,14 @@ export default function Home() {
             className="rounded-2xl"
             priority
           />
+          
+          {/* Gradient overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-2xl"></div>
         </div>
 
         {/* Caption - Made responsive */}
-        <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 bg-black/10 text-white p-2 md:p-4 rounded-lg max-w-[90%] md:max-w-[60%]">
-          <h2 className="text-sm md:text-lg font-bold">{images[currentIndex].caption}</h2>
+        <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 text-white p-2 md:p-4 max-w-[90%] md:max-w-[60%] z-10">
+          <h2 className="text-sm md:text-lg font-bold drop-shadow-lg">{images[currentIndex].caption}</h2>
         </div>
 
         {/* Arrows for Navigation - Made responsive */}
@@ -418,6 +423,48 @@ export default function Home() {
                   } flex flex-col items-center justify-center w-[80px] h-[80px] md:w-[100px] md:h-[100px] rounded-[8px] transition duration-300 cursor-pointer`}
                   onClick={() => setSelectedCategory(category.name)}
                 >
+                  <div className={`${
+                    selectedCategory === "All"
+                      ? "bg-customblue rounded-full p-3 mb-2 shadow-lg transform scale-110"
+                      : "mb-2 bg-white text-customblue hover:bg-gray-50 p-3 rounded-full shadow-sm hover:shadow-md transform hover:scale-105"
+                  } flex items-center justify-center transition-all duration-300`}>
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={selectedCategory === "All" ? "text-white" : "text-customblue"}
+                    >
+                      <rect x="3" y="3" width="7" height="7"/>
+                      <rect x="14" y="3" width="7" height="7"/>
+                      <rect x="14" y="14" width="7" height="7"/>
+                      <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                  </div>
+                  <span className={`text-xs font-medium text-center leading-tight transition-colors duration-300 ${
+                    selectedCategory === "All" 
+                      ? "text-customblue font-bold" 
+                      : "text-gray-700"
+                  }`}>
+                    {t('all')}
+                  </span>
+                </button>
+
+                {categories.map((category) => (
+                  <button
+                    key={category.name}
+                    className="flex flex-col items-center justify-center min-w-[70px] md:min-w-[80px] transition-all duration-300 cursor-pointer flex-shrink-0"
+                    onClick={() => setSelectedCategory(selectedCategory === category.name ? "All" : category.name)}
+                  >
+                    <div className={`${
+                      selectedCategory === category.name
+                        ? "bg-customblue rounded-full p-3 mb-2 shadow-lg transform scale-110"
+                        : "mb-2 bg-white text-customblue hover:bg-gray-50 p-3 rounded-full shadow-sm hover:shadow-md transform hover:scale-105"
+                    } flex items-center justify-center transition-all duration-300`}>
                   {selectedCategory === category.name ? (
                     <div className=" bg-customblue p-3 rounded-full">
                     <Image
@@ -444,6 +491,7 @@ export default function Home() {
                   <span className="text-xs md:text-sm font-medium">{category.name}</span>
                 </button>
               ))}
+              </div>
             </section>
             {filteredApps.length > 0 ? (
               <>
@@ -451,7 +499,7 @@ export default function Home() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 ">
                     {filteredApps
                       .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
-                      .slice(0, 6)
+                      .slice(0, 10)
                       .map((app) => (
                         <div
                           onClick={() => handleAppClick(app.id)}
@@ -467,7 +515,7 @@ export default function Home() {
                             }}
                           >
                             <Image
-                              src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                              src={buildMediaUrl(`${app.cover_graphics}`, true)}
                               alt={app.app_name}
                               layout="fill"
                               objectFit="contain"
@@ -478,29 +526,29 @@ export default function Home() {
                           <div className="p-3 md:p-4">
                             {/* App Icon and Title */}
                             <div className="flex items-start justify-between">
-                              <div className="flex items-center space-x-3 md:space-x-4">
+                              <div className="flex items-center space-x-3 md:space-x-4 flex-1 min-w-0">
                                 <div className="w-10 h-10 md:w-12 md:h-12">
                                   <Image
-                                    src={`http://127.0.0.1:8000${app.app_icon}`}
+                                    src={buildMediaUrl(`${app.app_icon}`, true)}
                                     alt={`${app.app_name} Icon`}
                                     width={48}
                                     height={48}
                                     className="rounded-md"
                                   />
                                 </div>
-                                <div>
+                                <div className="flex-1 min-w-0">
                                   <h2
-                                    className="font-semibold text-gray-800"
+                                    className="font-semibold text-gray-800 truncate"
                                     style={{ fontSize: "14px" }}
                                   >
                                     {app.app_name}
                                   </h2>
-                                  <p className="text-xs md:text-sm text-gray-500">
+                                  <p className="text-xs md:text-sm text-gray-500 truncate">
                                     {app.category} · {app.tags}
                                   </p>
                                 </div>
                               </div>
-                              <p className="text-xs md:text-sm text-gray-500">
+                              <p className="text-xs md:text-sm text-gray-500 ml-2">
                                 {app.view_count || 0} downloads
                               </p>
                             </div>
@@ -511,12 +559,12 @@ export default function Home() {
                 </section>
 
                 {/* Additional apps section */}
-                {filteredApps.length > 6 && (
+                {filteredApps.length > 10 && (
                   <section className="px-2 md:px-6 py-4 md:py-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                       {filteredApps
                         .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
-                        .slice(6)
+                        .slice(10)
                         .map((app) => (
                           <div
                             onClick={() => handleAppClick(app.id)}
@@ -532,7 +580,7 @@ export default function Home() {
                               }}
                             >
                               <Image
-                                src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                                src={buildMediaUrl(`${app.cover_graphics}`, true)}
                                 alt={app.app_name}
                                 layout="fill"
                                 objectFit="contain"
@@ -543,29 +591,29 @@ export default function Home() {
                             <div className="p-3 md:p-4">
                               {/* App Icon and Title */}
                               <div className="flex items-start justify-between">
-                                <div className="flex items-center space-x-3 md:space-x-4">
+                                <div className="flex items-center space-x-3 md:space-x-4 flex-1 min-w-0">
                                   <div className="w-10 h-10 md:w-12 md:h-12">
                                     <Image
-                                      src={`http://127.0.0.1:8000${app.app_icon}`}
+                                      src={buildMediaUrl(`${app.app_icon}`, true)}
                                       alt={`${app.app_name} Icon`}
                                       width={48}
                                       height={48}
                                       className="rounded-md"
                                     />
                                   </div>
-                                  <div>
+                                  <div className="flex-1 min-w-0">
                                     <h2
-                                      className="font-semibold text-gray-800"
+                                      className="font-semibold text-gray-800 truncate"
                                       style={{ fontSize: "14px" }}
                                     >
                                       {app.app_name}
                                     </h2>
-                                    <p className="text-xs md:text-sm text-gray-500">
+                                    <p className="text-xs md:text-sm text-gray-500 truncate">
                                       {app.category} · {app.tags}
                                     </p>
                                   </div>
                                 </div>
-                                <p className="text-xs md:text-sm text-gray-500">
+                                <p className="text-xs md:text-sm text-gray-500 ml-2">
                                   {app.view_count || 0} downloads
                                 </p>
                               </div>
@@ -603,22 +651,22 @@ export default function Home() {
                         key={app.id}
                         className="p-2 md:p-4 rounded cursor-pointer hover:shadow-lg transition-shadow duration-300"
                       >
-                        <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5">
+                        <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5 p-2">
                           <Image
-                            src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                            src={buildMediaUrl(`${app.cover_graphics}`, true)}
                             alt={app.app_name}
                             width={300}
                             height={200}
-                            className="object-cover w-full h-full"
+                            className="object-cover w-full h-full rounded-md"
                           />
                         </div>
                         <h3
-                          className="font-semibold text-gray-800"
+                          className="font-semibold text-gray-800 truncate"
                           style={{ fontSize: "12px" }}
                         >
                           {app.app_name}
                         </h3>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 truncate">
                           {app.category} • {app.tags}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
@@ -673,7 +721,7 @@ export default function Home() {
                       />
                     </div>
                   )}
-                  <span className="text-xs md:text-sm font-medium">{category.name}</span>
+                  <span className="text-xs md:text-sm font-medium text-center">{category.name}</span>
                 </button>
               ))}
             </section>
@@ -698,7 +746,7 @@ export default function Home() {
                         }}
                       >
                         <Image
-                          src={`http://127.0.0.1:8000${app.cover_graphics}`}
+                          src={buildMediaUrl(`${app.cover_graphics}`, true)}
                           alt={app.app_name}
                           layout="fill"
                           objectFit="contain" // Use "contain" if you want the entire image visible
@@ -712,21 +760,21 @@ export default function Home() {
                           <div className="flex items-center space-x-3 md:space-x-4">
                             <div className="w-10 h-10 md:w-12 md:h-12">
                               <Image
-                                src={`http://127.0.0.1:8000${app.app_icon}`}
+                                src={buildMediaUrl(`${app.app_icon}`, true)}
                                 alt={`${app.app_name} Icon`}
                                 width={48}
                                 height={48}
                                 className="rounded-md"
                               />
                             </div>
-                            <div>
+                            <div className="flex-1 min-w-0">
                               <h2
-                                className="font-semibold text-gray-800"
+                                className="font-semibold text-gray-800 truncate"
                                 style={{ fontSize: "14px" }}
                               >
                                 {app.web_portal}
                               </h2>
-                              <p className="text-xs md:text-sm text-gray-500">
+                              <p className="text-xs md:text-sm text-gray-500 truncate">
                                 {app.category} · {app.tags}
                               </p>
                             </div>
@@ -764,22 +812,22 @@ export default function Home() {
                         key={app.id}
                         className="p-2 md:p-4 rounded"
                       >
-                        <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5">
+                        <div className="overflow-hidden rounded-lg shadow-lg mb-2 md:mb-5 p-2">
                           <Image
-                            src={`http://127.0.0.1:8000${app.cover_graphics}`} // Assuming cover_graphics is the relative URL
+                            src={buildMediaUrl(`${app.cover_graphics}`, true)} // Assuming cover_graphics is the relative URL
                             alt={app.app_name}
                             width={300} // Width for the image
                             height={200} // Height for the image to fit in the container
-                            className="object-cover w-full h-full" // Ensures the image covers the container
+                            className="object-cover w-full h-full rounded-md" // Ensures the image covers the container
                           />
                         </div>
                         <h3
-                          className="font-semibold text-gray-800"
+                          className="font-semibold text-gray-800 truncate"
                           style={{ fontSize: "12px" }}
                         >
                           {app.web_portal}
                         </h3>
-                        <p className="text-xs md:text-sm text-gray-500">
+                        <p className="text-xs md:text-sm text-gray-500 truncate">
                           {app.category} · {app.tags}
                         </p>
                         <p className="text-xs md:text-sm text-gray-500 mt-1">
@@ -796,6 +844,7 @@ export default function Home() {
             )}
           </>
         )}
+      </div>
       </div>
 
       <Footer />

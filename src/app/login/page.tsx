@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { preventBackNavigation } from "@/utils/auth";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { buildBackendUrl } from "@/utils/api-config";
 
 export default function Login() {
   const { t } = useLanguage();
@@ -56,7 +57,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/users/login/", {
+      const response = await fetch(buildBackendUrl("/users/login/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -102,7 +103,9 @@ export default function Login() {
           </p>
         </div>
         
-        <img src="/logo.png" alt="Logo" className="w-full max-w-xs mx-auto md:mx-10" />
+                 <div className="flex justify-center w-full">
+           <img src="/logo.png" alt="Logo" className="w-full max-w-xs md:mx-10" />
+         </div>
         
         {/* Navigation row with logo and back button */}
         <div className="absolute top-2 md:top-5 right-2 md:right-5 flex items-center space-x-4 md:space-x-40">

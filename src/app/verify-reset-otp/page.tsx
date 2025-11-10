@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from '@/contexts/LanguageContext';
+import { buildBackendUrl } from '@/utils/api-config';
+
 
 export default function VerifyResetOTPPage() {
   const router = useRouter();
@@ -30,7 +32,7 @@ export default function VerifyResetOTPPage() {
     setSuccessMessage("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/users/verify-reset-otp/", {
+      const response = await fetch(buildBackendUrl("/users/verify-reset-otp/"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +64,7 @@ export default function VerifyResetOTPPage() {
     setSuccessMessage("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/users/forgot-password/", {
+      const response = await fetch(buildBackendUrl("/users/forgot-password/"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -7,6 +7,8 @@ import axios from "axios";
 import React from "react";
 // import React, { useEffect, useRef, useState } from "react";
 import { useRequireAuth } from "@/utils/auth";
+import { buildBackendUrl, buildServerBackendUrl } from '@/utils/api-config';
+
 
 const steps = [
   { label: "App Information", step: 1 },
@@ -155,7 +157,7 @@ const [isPublished, setIsPublished] = useState(false);
     
     try {
       const accessToken = localStorage.getItem("access_token");
-      const res = await fetch(`http://127.0.0.1:8000/apps/update/${id}/`, {
+      const res = await fetch(buildBackendUrl(`/apps/update/${id}/`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -206,7 +208,7 @@ const [isPublished, setIsPublished] = useState(false);
 
     try {
       const accessToken = localStorage.getItem("access_token");
-      const res = await fetch(`http://127.0.0.1:8000/apps/update/${id}/`, {
+      const res = await fetch(buildBackendUrl(`/apps/update/${id}/`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -235,9 +237,9 @@ const [isPublished, setIsPublished] = useState(false);
       // Fetch app details based on the id from the backend
       const fetchAppDetails = async () => {
         try {
-          const response = await fetch(
-            `http://127.0.0.1:8000/apps/app_listing/${id}`
-          );
+                  const response = await fetch(
+          buildServerBackendUrl(`/apps/app_listing/${id}`)
+        );
 
           const data = await response.json();
           console.log(data);

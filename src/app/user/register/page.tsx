@@ -16,6 +16,8 @@ import TermsAndConditions from "../../components/TermsAndConditions";
 import ReCaptchaComponent from "../../components/ReCaptcha";
 import RegistrationSuccess from "../../components/RegistrationSuccess";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { buildBackendUrl } from '@/utils/api-config';
+
 
 type Errors = {
   firstName?: string;
@@ -179,7 +181,7 @@ export default function Register() {
       try {
         console.log(userData);
         // Send data to backend (adjust API endpoint as needed)
-        const response = await fetch("http://127.0.0.1:8000/users/register/", {
+        const response = await fetch(buildBackendUrl("/users/register/"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -227,7 +229,9 @@ export default function Register() {
         >
             <p className="text-lg md:text-xl font-bold px-4 mt-6 md:mt-20 md:ml-20 md:mb-20 text-center md:text-left text-white">{t('welcome_message')}
             <br />{t('citizen_registration')}</p> 
-          <img src="/logo.png" alt="Logo" className="w-full max-w-xs mx-auto" />
+                     <div className="flex justify-center w-full">
+             <img src="/logo.png" alt="Logo" className="w-full max-w-xs" />
+           </div>
         </div>
         <div className="w-full md:w-1/2 px-6 py-8 md:mt-2 md:py-10 md:px-20 md:rounded-tr-[40px] md:rounded-br-[40px] bg-white shadow-md flex flex-col items-center">
           <div className="mb-4 md:mb-6 w-full">

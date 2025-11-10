@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import RegistrationSuccess from "../../components/RegistrationSuccess";
+import { buildBackendUrl } from '@/utils/api-config';
+
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -90,7 +92,7 @@ export default function RegisterPage() {
     // Send the combined data to your backend API
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/users/developer/register/",
+        buildBackendUrl("/users/developer/register/"),
         {
           method: "POST",
           headers: {

@@ -12,6 +12,8 @@ import Link from "next/link";
 import TermsAndConditions from "../components/TermsAndConditions";
 import ReCaptchaComponent from "../components/ReCaptcha";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { buildBackendUrl } from '@/utils/api-config';
+
 
 export default function Register() {
   const router = useRouter();
@@ -45,16 +47,30 @@ export default function Register() {
   const validatePhoneNumber = (phoneNumber: string) => {
     if (!phoneNumber) return false;
     
-    // Clean the phone number - remove spaces, dashes, etc.
-    const cleanedPhone = phoneNumber.replace(/\s+|-/g, '');
+    // Clean the phone number - remove all non-digit characters except + at the beginning
+    const cleanedPhone = phoneNumber.replace(/[^\d+]/g, '').replace(/\+(?=.*\+)/g, '');
+    
+    console.log('Original phone:', phoneNumber);
+    console.log('Cleaned phone:', cleanedPhone);
     
     // Check if the phone starts with the Ethiopian code +251 followed by 9 digits
     const validInternationalFormat = /^\+251\d{9}$/.test(cleanedPhone);
     
+    // Check if the phone starts with 251 followed by 9 digits (without + sign)
+    const validInternationalWithoutPlus = /^251\d{9}$/.test(cleanedPhone);
+    
     // Check if the phone starts with 0 followed by 9 digits (local format)
     const validLocalFormat = /^0\d{9}$/.test(cleanedPhone);
     
-    return validInternationalFormat || validLocalFormat;
+    // Also check for format without country code (9 digits starting with 9)
+    const validMobileFormat = /^9\d{8}$/.test(cleanedPhone);
+    
+    console.log('Valid international:', validInternationalFormat);
+    console.log('Valid international without +:', validInternationalWithoutPlus);
+    console.log('Valid local:', validLocalFormat);
+    console.log('Valid mobile:', validMobileFormat);
+    
+    return validInternationalFormat || validInternationalWithoutPlus || validLocalFormat || validMobileFormat;
   };
 
   // Handle phone number change
@@ -131,7 +147,7 @@ export default function Register() {
       try {
         console.log(formData.email);
         // Send OTP request
-        const response = await fetch("http://127.0.0.1:8000/users/send-otp/", {
+        const response = await fetch(buildBackendUrl("/users/send-otp/"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -181,7 +197,9 @@ export default function Register() {
             {t('gateway_message')}
           </p>
         </div>
-        <img src="/logo.png" alt="Logo" className="w-full max-w-xs mx-auto" />
+                 <div className="flex justify-center w-full">
+           <img src="/logo.png" alt="Logo" className="w-full max-w-xs" />
+         </div>
       </div>
       <div className="w-full md:w-1/2 px-6 py-8 md:mt-2 md:py-10 md:px-20 md:rounded-tr-[40px] md:rounded-br-[40px] bg-white shadow-md flex flex-col items-center">
         <div className="mb-4 md:mb-6 w-full">

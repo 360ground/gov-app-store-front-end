@@ -2,6 +2,8 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { buildBackendUrl } from '@/utils/api-config';
+
 
 function EmailVerification() {
   const router = useRouter();
@@ -27,7 +29,7 @@ function EmailVerification() {
 
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/users/verify-otp/",
+          buildBackendUrl("/users/verify-otp/"),
           {
             method: "POST",
             headers: {
