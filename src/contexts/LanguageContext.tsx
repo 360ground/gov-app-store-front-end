@@ -119,7 +119,7 @@ const translations: Translations = {
     'company': 'Company',
     'about_us': 'About Us',
     'faq': 'FAQ',
-    'copyright_bottom': 'Copyright © {year} Gov App Ethiopia All rights reserved. | Privacy Policy | Copyright Policy | Terms |',
+    'copyright_bottom': 'Copyright © {year} Powered by MInT. Developed by 360Ground. All rights reserved.',
     
     // FAQ Page
     'faq_title': 'Frequently Asked Questions',
@@ -151,8 +151,8 @@ const translations: Translations = {
     'health': 'Health',
     'agriculture': 'Agriculture',
     'trade': 'Trade',
-    'government_appstore': 'Government Appstore',
-    'official_appstore_fdre': 'The Official App Store of the FDRE',
+    'government_appstore': 'Government App Store',
+    'official_appstore_fdre': 'The official app store of FDRE',
     'mobile_apps': 'Mobile Apps',
     'web_portal': 'Web Portal',
     'search_apps': 'Search apps',
