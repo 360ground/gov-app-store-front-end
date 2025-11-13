@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-gray-100 py-4 md:py-5 px-4 md:px-10">
-      <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
         {/* Logo Section */}
         <div className="flex flex-col space-y-3 items-start w-full md:w-auto">
           <Image 
@@ -55,9 +55,9 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Links Section */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 text-sm text-black w-full md:w-auto">
+        <div className="flex flex-cols-2 justify-between gap-4 md:gap-8 text-sm text-black w-full md:w-[20rem]">
           {/* Column 1 */}
-          <div>
+          <div className=''>
             <h4 className="font-bold mb-2">{t('developers')}</h4>
             <ul>
               <li>
@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Column 3 */}
-          <div className="md:ml-20">
+          <div className="">
             <h4 className="font-bold mb-2">{t('company')}</h4>
             <ul>
               <li>
@@ -107,12 +107,15 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="border-t border-gray-700 pt-4 text-black flex justify-between text-[12px]">
+      <div className=" pt-4 text-black flex flex-col justify-center items-center text-center text-[12px]">
         <p style={{ fontSize: "12px" }}>
           {t('copyright_bottom').replace('{year}', new Date().getFullYear().toString())} 
         </p>
         <p >
-          {t('privacy_policy')}  |  {t('copyright_policy')}  |  {t('terms')}
+          <a href="/landing_page_user/privacy_policy">
+          {t('privacy_policy')}</a>  |  
+          <a href="/landing_page_user/copyright_policy"> {t('copyright_policy')} </a> |  
+          <a href="/landing_page_user/terms"> {t('terms')}</a>
         </p>
         <p >
           Ethiopia

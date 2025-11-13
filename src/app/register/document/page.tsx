@@ -102,13 +102,17 @@ export default function RegisterPage() {
         }
       );
 
-      if (response.status == 201) {
+      if (response.status === 201) {
         const result = await response.json();
-        // Show success modal instead of alert
         setIsSuccessModalVisible(true);
       } else {
+        // --- THIS IS THE PART TO CHANGE ---
         const errorData = await response.json();
-        alert(errorData.message || "Registration failed. Please try again.");
+        // Use the specific 'detail' message from the backend
+        const errorMessage = errorData.detail || "Registration failed. Please check your input and try again.";
+        console.error("Backend validation error:", errorMessage); // Also log it for detail
+        alert(errorMessage); // Show the specific error to the user
+        // --- END OF CHANGE ---
       }
     } catch (error) {
       console.error("Error during registration:", error);

@@ -153,7 +153,8 @@ export default function Register() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ 
-            email: formData.email,
+            // email: formData.email,
+            phone_number: phone,
             recaptchaToken: formData.recaptchaToken
           }),
         });
@@ -161,10 +162,12 @@ export default function Register() {
         if (response.ok) {
           // Save registration data in local storage
           localStorage.setItem("registrationData", JSON.stringify(formData));
+          localStorage.setItem("verificationPhone", phone);
           const url = new URL("/register/otp", window.location.origin);
-          url.searchParams.append("email", formData.email);
+          // url.searchParams.append("email", formData.email);
           // Navigate to the OTP page
-          router.push(url.toString());
+          // router.push(url.toString());
+          router.push("/register/otp");
         } else {
           setLoading(false);
           const errorData = await response.json();

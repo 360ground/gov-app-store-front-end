@@ -18,7 +18,7 @@ const LanguageSelector: React.FC = () => {
     <div className="relative">
       <button
         onClick={toggleDropdown}
-        className="px-3 py-1 rounded-md text-sm bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center space-x-1"
+        className="px-2 py-1 rounded-md text-xs lg:text-sm bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center space-x-1"
       >
         <span>{language === 'en' ? 'ENG' : 'AMH'}</span>
         <svg

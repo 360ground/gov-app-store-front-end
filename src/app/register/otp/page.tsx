@@ -11,20 +11,29 @@ function EmailVerification() {
   const [otp, setOtp] = useState("");
   const [email, setEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [phone, setPhone] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   const emailFromQuery = searchParams.get("email");
+  //   if (emailFromQuery) {
+  //     setEmail(emailFromQuery);
+  //   }
+  // }, [searchParams]);
 
   useEffect(() => {
-    const emailFromQuery = searchParams.get("email");
-    if (emailFromQuery) {
-      setEmail(emailFromQuery);
+    // Get the phone number from localStorage instead of URL
+    const phoneFromStorage = localStorage.getItem("verificationPhone");
+    if (phoneFromStorage) {
+      setPhone(phoneFromStorage);
     }
-  }, [searchParams]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOtp(e.target.value);
   };
 
   const handleVerifyOTP = async () => {
-    if (email && otp) {
+    if (phone && otp) {
       setLoading(true);
 
       try {
@@ -36,7 +45,7 @@ function EmailVerification() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              email,
+              phone_number: phone,
               otp,
             }),
           }
@@ -83,7 +92,7 @@ function EmailVerification() {
         </div>
         <div className="mb-4 md:mb-6 w-full text-center mt-10 md:mt-6">
           <p className="text-base md:text-lg text-customblue">
-            Enter the OTP sent to {email}
+            Enter the OTP sent to {phone}
           </p>
         </div>
         <div className="mb-4 md:mb-6 w-full px-4 md:px-0 flex justify-center">
