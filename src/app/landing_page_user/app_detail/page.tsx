@@ -388,17 +388,17 @@ export default function AppDetails() {
               <div className="flex flex-col w-full">
                 <div className="flex items-center space-x-3 md:space-x-4">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden">
-                    <img
+                    {/* <img
                       src="/mint.png"
                       alt={review.user}
                       className="w-full h-full object-cover"
-                    />
+                    /> */}
                   </div>
                   {/* User name, date, and rating */}
                   <div className="flex flex-col flex-grow">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-bold text-black text-sm md:text-base">{review.user}</p>
+                        {/* <p className="font-bold text-black text-sm md:text-base">{review.user}</p> */}
                         <p className="text-black text-xs md:text-sm">
                           {new Date(review.created_at).toLocaleString()}
                         </p>

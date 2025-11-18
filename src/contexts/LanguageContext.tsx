@@ -120,7 +120,11 @@ const translations: Translations = {
     'company': 'Company',
     'about_us': 'About Us',
     'faq': 'FAQ',
-    'copyright_bottom': 'Copyright © {year} Powered by MInT. Developed by 360Ground. All rights reserved.',
+    'copyright_bottom': 'Copyright © {year} Powered by',
+    'mint': 'MINT',
+    '360ground': '360Ground',
+    'developed_by': 'Developed by',
+    'all_rights': 'All rights reserved.',
     
     // FAQ Page
     'faq_title': 'Frequently Asked Questions',

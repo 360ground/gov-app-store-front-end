@@ -51,6 +51,7 @@ export default function ResetPasswordPage() {
     }
 
     try {
+      const isDeveloper = localStorage.getItem("resetUserType") === "developer";
       const response = await fetch(buildBackendUrl("/users/reset-password/"), {
         method: "POST",
         headers: {
@@ -59,6 +60,7 @@ export default function ResetPasswordPage() {
         body: JSON.stringify({
           email,
           new_password: formData.newPassword,
+          is_developer: isDeveloper
         }),
       });
 
@@ -71,8 +73,9 @@ export default function ResetPasswordPage() {
         localStorage.removeItem("resetUserType");
         // Redirect to appropriate login page after 2 seconds
         setTimeout(() => {
-          router.push(userType === "developer" ? "/developer/login" : "/login");
+          router.push(userType === "developer" ? "/login" : "user/login");
         }, 2000);
+        console.log(userType)
       } else {
         setErrorMessage(data.message || "Failed to reset password. Please try again.");
       }
@@ -81,6 +84,7 @@ export default function ResetPasswordPage() {
     } finally {
       setIsLoading(false);
     }
+    
   };
 
   return (
@@ -178,7 +182,7 @@ export default function ResetPasswordPage() {
             </button>
             <button
               type="button"
-              onClick={() => router.push(userType === "developer" ? "/developer/login" : "/login")}
+              onClick={() => router.push(userType === "developer" ? "/login" : "user/login")}
               className="bg-white text-customblue py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center border-2 border-customblue hover:bg-customblue hover:text-white"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
