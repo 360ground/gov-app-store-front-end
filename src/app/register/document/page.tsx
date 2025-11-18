@@ -183,6 +183,7 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   className="mt-1 block w-full px-3 md:px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black text-sm md:text-base"
                   placeholder={`Enter ${field.label.toLowerCase()}`}
+                  required
                 />
                 <div className="text-xs text-gray-500 text-right">
                   {formData[field.name as keyof typeof formData].length}/80

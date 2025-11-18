@@ -1,68 +1,37 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { buildBackendUrl } from '@/utils/api-config';
 
-
-export default function VerifyResetOTPPage() {
+export default function ForgotPasswordPage() {
   const router = useRouter();
-  const [otp, setOtp] = useState("");
+  const searchParams = useSearchParams();
+  const { t } = useLanguage();
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [email, setEmail] = useState("");
-  const { t } = useLanguage();
+  const [userType, setUserType] = useState("user");
+  const isDeveloper = userType === "developer";
 
   useEffect(() => {
-    // Get email from localStorage
-    const storedEmail = localStorage.getItem("resetEmail");
-    if (!storedEmail) {
-      router.push("/forgot-password");
-    } else {
-      setEmail(storedEmail);
+    // Get user type from URL
+    const type = searchParams.get("type");
+    console.log("type is ", type)
+    if (type === "developer" || type === "user") {
+      setUserType(type);
     }
-  }, [router]);
-
+  }, [searchParams]);
+  
+  console.log("user type is ",userType)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
-
-    try {
-      const isDeveloper = localStorage.getItem("resetUserType") === "developer";
-      const response = await fetch(buildBackendUrl("/users/verify-reset-otp/"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, otp, is_developer: isDeveloper }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccessMessage(t('otp_verified_successfully'));
-        // Redirect to reset password page after 2 seconds
-        setTimeout(() => {
-          router.push("/reset-password");
-        }, 2000);
-      } else {
-        setErrorMessage(data.message || t('invalid_otp'));
-      }
-    } catch (error) {
-      setErrorMessage(t('error_occurred'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleResendOTP = async () => {
-    setIsLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
+    
 
     try {
       const response = await fetch(buildBackendUrl("/users/forgot-password/"), {
@@ -70,18 +39,26 @@ export default function VerifyResetOTPPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, is_developer: isDeveloper }),
       });
+      console.log("response is ",response)
 
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage(t('new_otp_sent'));
+        setSuccessMessage(t('reset_email_sent'));
+        // Store both email and user type in localStorage
+        localStorage.setItem("resetEmail", email);
+        localStorage.setItem("resetUserType", userType);
+        // Redirect to verify OTP page after 3 seconds
+        setTimeout(() => {
+          router.push("/verify-reset-otp");
+        }, 3000);
       } else {
-        setErrorMessage(data.message || t('failed_to_resend_otp'));
+        setErrorMessage(data.message || t('reset_error'));
       }
     } catch (error) {
-      setErrorMessage(t('error_occurred'));
+      setErrorMessage(t('reset_error_occurred'));
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +68,7 @@ export default function VerifyResetOTPPage() {
     <div className="min-h-screen flex flex-col md:flex-row bg-white">
       <div className="w-full md:w-1/2 py-6 md:min-h-full bg-customblue">
         <p className="text-lg md:text-xl font-bold mt-5 md:mt-10 px-4 md:ml-10 text-white text-center md:text-left">
-          {t('verify_otp')}
+          {t('forgot_password_title')}
         </p>
         <img src="/logo.png" alt="Logo" className="w-full max-w-xs mx-auto mt-6 md:mt-10" />
       </div>
@@ -110,24 +87,24 @@ export default function VerifyResetOTPPage() {
         <form onSubmit={handleSubmit} className="w-full mt-10 md:mt-4">
           <div className="mb-4 md:mb-6">
             <label className="text-xl md:text-2xl font-bold text-customblue pb-6 md:pb-10 block">
-              {t('enter_verification_code')}
+              {t('reset_password')}
             </label>
             <span className="block text-xs md:text-sm text-[#989090] pt-2 md:pt-3">
-              {t('enter_verification_code')}
+              {t('reset_instructions')}
             </span>
           </div>
 
           <div className="mb-6">
-            <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('verification_code')}
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              {t('email_address')}
             </label>
             <input
-              type="text"
-              id="otp"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="mt-1 block w-full px-3 md:px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black text-sm md:text-base"
-              placeholder={t('enter_verification_code')}
+              placeholder={t('enter_email')}
               required
             />
           </div>
@@ -147,25 +124,31 @@ export default function VerifyResetOTPPage() {
           <div className="flex flex-col md:flex-row mt-4 md:mt-6 justify-between w-full space-y-3 md:space-y-0 md:space-x-4">
             <button
               type="submit"
-              className="w-full bg-customblue text-white py-2 md:py-3 px-4 md:px-10 hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-customblue text-sm md:text-base"
-              style={{ borderRadius: "20px", marginTop: "10px" }}
+              className="w-full bg-customblue text-white py-3 px-6 hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-customblue text-sm md:text-base rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center"
               disabled={isLoading}
             >
               {isLoading ? (
                 <div className="flex justify-center items-center">
-                  <div className="spinner-border animate-spin w-4 h-4 md:w-6 md:h-6 border-4 border-t-transparent border-blue-500 rounded-full"></div>
+                  <div className="spinner-border animate-spin w-5 h-5 border-4 border-t-transparent border-white rounded-full"></div>
                 </div>
               ) : (
-                t('verify_otp')
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {t('send_reset_instructions')}
+                </>
               )}
             </button>
             <button
               type="button"
-              onClick={handleResendOTP}
-              className="bg-gray-300 text-gray-700 py-2 md:py-3 px-6 md:px-10 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 w-full md:w-auto text-sm md:text-base flex items-center justify-center"
-              disabled={isLoading}
+              onClick={() => router.push(userType === "developer" ? "/developer/login" : "/login")}
+              className="bg-white text-customblue py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center border-2 border-customblue hover:bg-customblue hover:text-white"
             >
-              {t('resend_otp')}
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+              </svg>
+              {t('back_to_login')}
             </button>
           </div>
         </form>

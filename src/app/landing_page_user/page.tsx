@@ -274,13 +274,16 @@ export default function Home() {
               </button>
             </div>
           </div>
+          {username ?? <div className="md:hidden text-sm mt-1 md:mt-0 md:px-4 px-2 py-1 md:py-2 bg-blue-600 text-white rounded-[50px]">
+            {username}
+          </div>}
 
           {/* Mobile login button */}
           <button
             onClick={username ? logoutclick : () => router.push("/user/login")}
             className="md:hidden text-sm mt-1 md:mt-0 md:px-4 px-2 py-1 md:py-2 bg-blue-600 text-white rounded-[50px]"
           >
-            {username || "Login"}
+            {username? 'Logout' : 'Login'}
           </button>
         </div>
 
@@ -302,13 +305,18 @@ export default function Home() {
           />
        
           {/* Desktop login button and language selector - hidden on mobile */}
-          <div className="hidden md:flex items-center space-x-4 ">
+          <div className="hidden md:flex items-center space-x-4">
             <LanguageSelector />
+            <button
+              className={`text-sm md:px-4 px-2 py-1 md:py-2 bg-blue-600 text-white rounded-[50px] ${username ? 'block' : 'hidden'}`}
+            >
+              {username ?? username}
+            </button>
             <button
               onClick={username ? logoutclick : () => router.push("/user/login")}
               className="text-sm md:px-4 px-2 py-1 md:py-2 bg-blue-600 text-white rounded-[50px] cursor-pointer hover:bg-blue-700 transition-colors duration-300"
             >
-              {username || "Login"}
+              {username? 'Logout' : 'Login'}
             </button>
           </div>
         </div>

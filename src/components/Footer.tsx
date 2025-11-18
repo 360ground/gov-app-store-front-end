@@ -107,10 +107,16 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className=" pt-4 text-black flex flex-col justify-center items-center text-center text-[12px]">
-        <p style={{ fontSize: "12px" }}>
-          {t('copyright_bottom').replace('{year}', new Date().getFullYear().toString())} 
-        </p>
+      <div className="pt-4 text-black flex flex-col justify-center items-center text-center text-[12px]">
+        <div className='flex'>
+          <p style={{ fontSize: "12px" }}>
+            {t('copyright_bottom').replace('{year}', new Date().getFullYear().toString())} 
+          </p>
+          <a href='http://www.mint.gov.et/' className='mx-1 text-blue-700'>{t('mint')}.</a>
+          <p>{t('developed_by')}</p>
+          <a href="https://360ground.com/" className='mx-1 text-blue-700'>{t('360ground')}.</a>
+          <p>{t('all_rights')}</p>
+        </div>
         <p >
           <a href="/landing_page_user/privacy_policy">
           {t('privacy_policy')}</a>  |  
