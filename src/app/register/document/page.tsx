@@ -102,13 +102,17 @@ export default function RegisterPage() {
         }
       );
 
-      if (response.status == 201) {
+      if (response.status === 201) {
         const result = await response.json();
-        // Show success modal instead of alert
         setIsSuccessModalVisible(true);
       } else {
+        // --- THIS IS THE PART TO CHANGE ---
         const errorData = await response.json();
-        alert(errorData.message || "Registration failed. Please try again.");
+        // Use the specific 'detail' message from the backend
+        const errorMessage = errorData.detail || "Registration failed. Please check your input and try again.";
+        console.error("Backend validation error:", errorMessage); // Also log it for detail
+        alert(errorMessage); // Show the specific error to the user
+        // --- END OF CHANGE ---
       }
     } catch (error) {
       console.error("Error during registration:", error);
@@ -179,6 +183,7 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   className="mt-1 block w-full px-3 md:px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black text-sm md:text-base"
                   placeholder={`Enter ${field.label.toLowerCase()}`}
+                  required
                 />
                 <div className="text-xs text-gray-500 text-right">
                   {formData[field.name as keyof typeof formData].length}/80

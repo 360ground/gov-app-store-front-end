@@ -13,21 +13,25 @@ export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [userType, setUserType] = useState("user");
+  const [userType, setUserType] = useState("developer");
+  const isDeveloper = userType === "developer";
 
   useEffect(() => {
     // Get user type from URL
     const type = searchParams.get("type");
+    console.log("type is ", type)
     if (type === "developer" || type === "user") {
       setUserType(type);
     }
   }, [searchParams]);
-
+  
+  console.log("user type is ",userType)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
+    
 
     try {
       const response = await fetch(buildBackendUrl("/users/forgot-password/"), {
@@ -35,8 +39,9 @@ export default function ForgotPasswordPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, is_developer: isDeveloper }),
       });
+      console.log("response is ",response)
 
       const data = await response.json();
 

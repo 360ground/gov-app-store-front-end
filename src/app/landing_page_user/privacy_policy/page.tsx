@@ -7,116 +7,25 @@ export default function AboutUs() {
   const { t } = useLanguage();
 
   return (
-    <div className="font-sans">
+    <div className="font-sans flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="bg-blue-700 text-white py-12 md:py-20">
         <div className="container mx-auto text-center px-4 md:px-0">
-          <h1 className="text-3xl md:text-4xl font-bold">{t('about_title')}</h1>
-          <p className="mt-4 text-base md:text-lg">{t('about_subtitle')}</p>
+          <h1 className="text-3xl md:text-4xl font-bold">App Store Customer Privacy Policy</h1>
+          
         </div>
       </section>
 
       {/* Objectives Section */}
-      <section className="py-8 bg-gray-100">
-        <div className="container mx-auto text-center px-4 md:px-6">
-          <h2 className="text-xl md:text-2xl font-bold mb-2 text-black">{t('about_objectives')}</h2>
-          <p className="text-gray-600 mb-6">{t('about_objectives_subtitle')}</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
-            <div className="bg-white p-4 md:p-6 shadow-md rounded">
-              <h3 className="text-lg md:text-xl font-semibold text-black">{t('about_digital')}</h3>
-              <p className="mt-2 text-sm md:text-base text-gray-600">{t('about_digital_desc')}</p>
-            </div>
-            <div className="bg-white p-4 md:p-6 shadow-md rounded">
-              <h3 className="text-lg md:text-xl font-semibold text-black">{t('about_security')}</h3>
-              <p className="mt-2 text-sm md:text-base text-gray-600">{t('about_security_desc')}</p>
-            </div>
-            <div className="bg-white p-4 md:p-6 shadow-md rounded">
-              <h3 className="text-lg md:text-xl font-semibold text-black">{t('about_collaboration')}</h3>
-              <p className="mt-2 text-sm md:text-base text-gray-600">{t('about_collaboration_desc')}</p>
-            </div>
-          </div>
-        </div>
+      <section className="py-8 bg-gray-100 px-80 flex-1 pb-32">
+        <p className='text-black mx-auto text-xl text-center'>
+            App Store is committed to your privacy. <br/> Read our customer Privacy Policy for a clear explanation of how we collect, use, disclose, transfer, and store your information.
+        </p>
       </section>
-      <section className="py-8 bg-gray-100">
-        <div className="container mx-auto px-4 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-          <div className="flex justify-center md:justify-start">
-            <Image
-              src="/country.png"
-              alt="Vision"
-              width={500}
-              height={300}
-              className="rounded shadow-md max-w-full h-auto"
-            />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-black mt-4 md:mt-0">{t('about_services_title')}</h3>
-            <p className="mt-2 text-sm md:text-base text-gray-600">
-              {t('about_services_desc')}
-            </p>
-          </div>
-        </div>
-      </section>
+      
 
 
-      {/* Statistics Section */}
-      <section className="bg-blue-700 text-white py-10 md:py-16">
-        <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 text-center gap-4 px-4">
-          <div>
-            <h3 className="text-2xl md:text-3xl font-bold">2+</h3>
-            <p className="mt-2 text-sm md:text-base">{t('years')}</p>
-          </div>
-          <div>
-            <h3 className="text-2xl md:text-3xl font-bold">100+</h3>
-            <p className="mt-2 text-sm md:text-base">{t('apps')}</p>
-          </div>
-          <div>
-            <h3 className="text-2xl md:text-3xl font-bold">40</h3>
-            <p className="mt-2 text-sm md:text-base">{t('download_rate')}</p>
-          </div>
-          <div>
-            <h3 className="text-2xl md:text-3xl font-bold">20+</h3>
-            <p className="mt-2 text-sm md:text-base">{t('industries_served')}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Mission and Vision Section */}
-      <section className="py-8 md:py-16 bg-gray-100">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-xl font-bold text-black">{t('about_mission_title')}</h3>
-              <p className="mt-4 text-sm md:text-base text-gray-600">
-                {t('about_mission_desc')}
-              </p>
-            </div>
-            <div className="flex justify-center md:justify-start order-first md:order-none mt-4 md:mt-0">
-              <Image
-                src="/our_mission.png"
-                alt="Mission"
-                width={500}
-                height={300}
-                className="rounded shadow-md max-w-full h-auto"
-              />
-            </div>
-            <div className="flex justify-center md:justify-start mt-4 md:mt-0">
-              <Image
-                src="/our_vission.png"
-                alt="Vision"
-                width={500}
-                height={300}
-                className="rounded shadow-md max-w-full h-auto"
-              />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-black">{t('about_vision_title')}</h3>
-              <p className="mt-4 text-sm md:text-base text-gray-600">
-                {t('about_vision_desc')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Footer */}
       <footer className="bg-blue-900 text-white py-4 md:py-5 px-4 md:px-10">
@@ -225,7 +134,10 @@ export default function AboutUs() {
           {t('copyright_bottom').replace('{year}', new Date().getFullYear().toString())} 
         </p>
         <p >
-          {t('privacy_policy')}  |  {t('copyright_policy')}  |  {t('terms')}
+          <a href="/landing_page_user/privacy_policy">
+          {t('privacy_policy')}</a>  |  
+          <a href="/landing_page_user/copyright_policy"> {t('copyright_policy')} </a> |  
+          <a href="/landing_page_user/terms"> {t('terms')}</a>
         </p>
         <p >
           Ethiopia

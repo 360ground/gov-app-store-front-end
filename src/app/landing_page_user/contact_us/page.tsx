@@ -104,21 +104,21 @@ export default function HelpPage() {
                 <LiaPhoneVolumeSolid className="text-2xl md:text-3xl text-esxmain mr-3 md:mr-4 text-black" />
                 <div>
                   <p className="font-semibold text-black">{t('phone')}</p>
-                  <p className="text-gray-600">03 5432 1234</p>
+                  <p className="text-gray-600">+251118132191</p>
                 </div>
               </div>
               <div className="flex items-center">
                 <LiaFaxSolid className="text-2xl md:text-3xl text-esxmain mr-3 md:mr-4 text-black" />
                 <div>
-                  <p className="font-semibold text-black">{t('fax')}</p>
-                  <p className="text-gray-600">03 5432 1234</p>
+                  <p className="font-semibold text-black">{t('website')}</p>
+                  <p className="text-gray-600">www.mint.gov.et</p>
                 </div>
               </div>
               <div className="flex items-center">
                 <MdOutlineAttachEmail className="text-2xl md:text-3xl text-esxmain mr-3 md:mr-4 text-black" />
                 <div>
                   <p className="font-semibold text-black">{t('email')}</p>
-                  <p className="text-gray-600">info@marcc.com.au</p>
+                  <p className="text-gray-600">contact@mint.gov.et</p>
                 </div>
               </div>
             </div>

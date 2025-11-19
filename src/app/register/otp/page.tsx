@@ -11,6 +11,7 @@ function EmailVerification() {
   const [otp, setOtp] = useState("");
   const [email, setEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // const [phone, setPhone] = useState<string | null>(null);
 
   useEffect(() => {
     const emailFromQuery = searchParams.get("email");
@@ -18,6 +19,14 @@ function EmailVerification() {
       setEmail(emailFromQuery);
     }
   }, [searchParams]);
+
+  // useEffect(() => {
+  //   // Get the phone number from localStorage instead of URL
+  //   const phoneFromStorage = localStorage.getItem("verificationPhone");
+  //   if (phoneFromStorage) {
+  //     setPhone(phoneFromStorage);
+  //   }
+  // }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOtp(e.target.value);
