@@ -66,7 +66,7 @@ export default function FAQPage() {
       </section>
 
       {/* Tabs */}
-      <section className="max-w-7xl w-full mx-auto h-full px-4 py-6 flex-1">
+      <section className="w-full lg:w-[960px] mx-auto h-full px-4 lg:px-0 py-6 flex-1">
         <div className="flex justify-center flex-wrap gap-2 mb-6 md:mb-8">
           {tabs.map((tab) => (
             <button

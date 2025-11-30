@@ -23,7 +23,7 @@ export default function HelpPage() {
       </section>
 
       {/* Contact Form Section */}
-      <div className="relative md:-top-52 mx-4 md:mx-20 mt-8 md:mt-40 max-w-contentwidth">
+      <div className="relative md:-top-52 mx-auto mt-8 md:mt-40 max-w-contentwidth w-full lg:w-[960px]">
         <div className="flex flex-col md:flex-row md:justify-between gap-6 md:gap-0">
           {/* Form */}
           <div className="w-full md:w-[48%] space-y-4 bg-white p-6 md:p-12 shadow-xl rounded-lg md:rounded-none">
