@@ -235,28 +235,32 @@ export default function AppDetails() {
 
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white ">
       <Toaster />
-      <header className="flex justify-between items-center px-4 md:px-6 py-4 bg-gray-100">
-        <div className="flex items-center space-x-4">
-          <Link href="/landing_page_user">
-            <Image src="/logo_efdri.png" alt="Logo" width={40} height={40} />
-          </Link>
-        </div>
+      <header className=" bg-gray-100">
+        <div className="w-full lg:w-[960px] flex justify-between items-center px-4 md:px-0 py-4 mx-auto">
+          <div className="flex items-center space-x-4">
+            <Link href="/landing_page_user">
+              <Image src="/logo_efdri.png" alt="Logo" width={40} height={40} />
+            </Link>
+          </div>
 
-        <div className="flex items-center space-x-4">
-          <LanguageSelector />
-          <button
-            onClick={username ? logoutclick : () => router.push("/user/login")}
-            className="text-sm px-4 py-2 bg-blue-600 text-white rounded-[50px]"
-          >
-            {username || t('login')}
-          </button>
+          <div className="flex items-center space-x-4">
+            <LanguageSelector />
+            <button
+              onClick={username ? logoutclick : () => router.push("/user/login")}
+              className="text-sm px-4 py-2 bg-blue-600 text-white rounded-[50px]"
+            >
+              {username || t('login')}
+            </button>
+          </div>
         </div>
       </header>
+      <div className="w-full lg:w-[960px] mx-auto">
       
       {/* Main content container with left-aligned layout and right spacing */}
-      <div className="max-w-4xl pl-12 md:pl-20 lg:pl-20 pr-12 md:pr-20 lg:pr-32">
+      {/* <div className="max-w-4xl pl-12 md:pl-20 lg:pl-20 pr-12 md:pr-20 lg:pr-32"> */}
+      <div className="w-full">
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8 py-8 md:py-12">
         <img
           src={appDetails.app_icon || "/eodb.jpg"} // Display fetched app icon
@@ -320,7 +324,7 @@ export default function AppDetails() {
           <h2 className="text-gray-800 font-bold mb-4 md:mb-6" style={{ fontSize: "18px" }}>
           {t('screenshots')}
         </h2>
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide flex-wrap">
           {appDetails.screenshots?.map(
             (screenshot: {
               id: Key | null | undefined;
@@ -675,7 +679,7 @@ export default function AppDetails() {
           </div>
         </div>
       )}
-
+      </div>
       <Footer />
     </main>
   );
